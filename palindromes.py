@@ -37,7 +37,7 @@
 # ofwel "overhangs". Deze hebben een zuivere of "scheve" symmetrie 
 # (hierop is vooraf te filteren).
 # Zuivere symmetrie levert een "één-woords-palindroom" op (dus bij -q 1),
-# deze zijn relatief # simpel aan de huidige functionaliteit toe te voegen.
+# deze zijn relatief simpel aan de huidige functionaliteit toe te voegen.
 #
 # Random-methodes in Python:
 # random.SystemRandom(), os.urandom() zijn zuiverder dan random.random()
