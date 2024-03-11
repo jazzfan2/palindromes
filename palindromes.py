@@ -80,6 +80,7 @@ import random
 import time
 from string import ascii_lowercase
 
+
 def to_list(file, language):
     """Convert language file to dictionarylist:"""
     if language == "g": # German language file
