@@ -365,14 +365,13 @@ if sorted_order or random_order:              # Automatic palindromes generation
 #           if count > maxcount:
 #               sys.exit()
 
-        for c in ascii_lowercase:             # Type 2: RightSide = letter + (LeftSide reversed)
-            norm_args = norm_args + c
-            for p in partitions(norm_args[::-1]):
+        for char in ascii_lowercase:          # Type 2: RightSide = letter + (LeftSide reversed)
+            norm_args_plus = norm_args + char
+            for p in partitions(norm_args_plus[::-1]):
                 get_words(p, 0, [])
-            norm_args = norm_args[:-1]
 
-        norm_args = norm_args[:-1]            # Type 3: RightSide = (LeftSide - letter) reversed
-        for p in partitions(norm_args[::-1]):
+        norm_args_minus = norm_args[:-1]      # Type 3: RightSide = (LeftSide - letter) reversed
+        for p in partitions(norm_args_minus[::-1]):
             get_words(p, 0, []) 
 
 else:                                         # Single query
