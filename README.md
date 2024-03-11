@@ -1,5 +1,5 @@
 # Name: palindromes.py
-palindromes.py - Program that generates multi-word palindromes.
+palindromes.py - Program that generates (a stream of) multi-word palindromes.
 
 # Description:
 palindromes.py is a Python3 program that generates multi-word palindromes,
@@ -7,7 +7,7 @@ including the optional words given - whether or not existing - given as argument
 
 palindromes.py can be used in two modes:
 - Automatic generating mode (if either option -S or -R is given) with optional word argument(s),
-rendering solutions in either:
+rendering a stream of solutions in either:
     - Sorted lexicographical word order, or
     - Random order
 - Query mode (without any of the options mentioned above) with compulsary word argument(s)
