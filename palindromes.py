@@ -5,33 +5,43 @@
 # Description: Multi-word Palindromes-generator!
 #
 # Algoritme:
-# 1. Laat één enkele combinatie, of random- of volgordelijke combinaties woorden genereren, 
-#    al dan niet begrensd door maximum woord-aantal en minimum woord--lengte en totaal 
-#    aantal letters. Optionele logfunctie?
-# 2. Geef optioneel als argument een reeks woorden die in de palindroom moeten zitten.
-#    Deze woorden filteren vooralsnog alleen het linkerdeel van de palindromen.
-# 3. De woordcombinaties aaneenschakelen tot één string en normaliseren (accenten en
-#    interpunctie verwijderen, kleine letters).
-# 4. Drie typen spiegelingen om het rechterdeel van het linkerdeel af te leiden:
-#    - type 1: rechter string is gelijk aan links omgedraaid. Geen middenletter.
-#    - type 2: idem als type 1, met extra letter uit de reeks a t/m z daarna vóór rechts #              geplaatst.
-#    - type 3: laatste letter van links (= middenletter) afhalen vóór omdraaien naar rechts.
-# 4. De resulterende genormaliseerde rechter-string recursief opdelen in alle mogelijke
-#    partities.
-# 5. Tijdens het opdelen per partitie vergelijken met bestaande (genormaliseerde) woorden.
-# 6. Hiervoor is een dictionary nodig met als keys unieke genormaliseerde woorden en als 
-#    value een lijst daaraan equivalente echte woorden, incl. interpunctie, accenten en case.
-# 7. Indien geen match, huidige recursie afbreken en met nieuwe partitie beginnen etc.
-# 8. Partitiereeksen met bij elke partitie een bestaand woord zijn oplossingen voor de 
-#    rechterhelft.
+# 1. Laat één enkele combinatie, of random- of volgordelijke combinaties
+#    woorden genereren, al dan niet begrensd door maximum woord-aantal,
+#    minimum woord-lengte en totaal aantal letters. Optionele logfunctie?
+# 2. Geef optioneel als argument een reeks woorden die in de palindroom 
+#    moeten zitten. Deze woorden filteren vooralsnog alleen het linkerdeel
+#    van de palindromen.
+# 3. De woordcombinaties aaneenschakelen tot één string en normaliseren
+#    (accenten en interpunctie verwijderen, kleine letters).
+# 4. Drie typen spiegelingen om het rechterdeel van het linkerdeel af
+#    te leiden:
+#    - type 1: rechter string is gelijk aan links omgedraaid.
+#              Geen middenletter.
+#    - type 2: idem als type 1, met extra letter uit de reeks a t/m z
+#              (= middenletter) daarna vóór rechts geplaatst.
+#    - type 3: laatste letter van links (= middenletter) afhalen vóór
+#              omdraaien naar rechts.
+# 5. De resulterende genormaliseerde rechter-string recursief opdelen
+#    in alle mogelijke partities.
+# 6. Tijdens het opdelen per partitie vergelijken met bestaande 
+#    (genormaliseerde) woorden.
+# 7. Hiervoor is een dictionary nodig met als keys unieke genormaliseerde
+#    woorden en als value een lijst daaraan equivalente echte woorden,
+#    incl. interpunctie, accenten en case.
+# 8. Indien geen match, huidige recursie afbreken en met nieuwe partitie
+#    beginnen etc.
+# 9. Partitiereeksen met bij elke partitie een bestaand woord zijn
+#    oplossingen voor de rechterhelft.
 #
-# Nog zonder een oplossing voor palindromen met "middenwoorden" ("overhangs").
-# Deze hebben een zuivere of "scheve" symmetrie (hierop is vooraf te filteren).
-# Zuivere symmetrie levert een "één-woords-palindroom" op (dus bij -q 1), deze zijn relatief
-# simpel aan de huidige functionaliteit toe te voegen.
+# Nog zonder een oplossing voor palindromen met "middenwoorden" 
+# ofwel "overhangs". Deze hebben een zuivere of "scheve" symmetrie 
+# (hierop is vooraf te filteren).
+# Zuivere symmetrie levert een "één-woords-palindroom" op (dus bij -q 1),
+# deze zijn relatief # simpel aan de huidige functionaliteit toe te voegen.
 #
 # Random-methodes in Python:
-# random.SystemRandom(), os.urandom() zijn zuiverder dan random.random() maar trager.
+# random.SystemRandom(), os.urandom() zijn zuiverder dan random.random()
+# maar trager.
 #
 ######################################################################################
 #
