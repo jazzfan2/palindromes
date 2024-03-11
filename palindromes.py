@@ -215,6 +215,24 @@ def permutelist(list1, list2 = []):
             yield from permutelist(items[0:i] + items[i+1:], out + items[i:i+1])
 
 
+def generate_results(norm_args):
+    """Generate results by 3 types of mirroring of the normalized arguments on the left side"""
+#   count = 0
+    for p in partitions(norm_args[::-1]): # Type 1: RightSide = LeftSide reversed
+        get_words(p, 0, [])               # Interne yield loop maken met count increment?
+#       if count > maxcount:
+#           sys.exit()
+
+    for char in ascii_lowercase:          # Type 2: RightSide = char + (LeftSide reversed)
+        norm_args_plus = norm_args + char
+        for p in partitions(norm_args_plus[::-1]): # All partitions of reversed string
+            get_words(p, 0, [])                    # Matching palindrome word-combination
+
+    norm_args_minus = norm_args[:-1]      # # Type 3: RightSide = (LeftSide - char) reversed
+    for p in partitions(norm_args_minus[::-1]):
+        get_words(p, 0, []) 
+
+
 language = dictionary_nl = "/usr/share/dict/dutch"
 dictionary_am = "/usr/share/dict/american-english"
 dictionary_br = "/usr/share/dict/british-english"
@@ -355,26 +373,11 @@ for word in dictionarylist:
     else:
         normdict[normalized] = [word]
 
-if sorted_order or random_order:              # Automatic palindromes generation: 3 types.
+if sorted_order or random_order:            # Automatic palindromes generation: 3 types
     for combination in combine(dictlist_reduced, string_length, non_option_args, sorted_order):
         LeftSide = ' '.join(combination)
         norm_args = normalize(LeftSide)
-#       count = 0
-        for p in partitions(norm_args[::-1]): # Type 1: RightSide = LeftSide reversed
-            get_words(p, 0, [])               # Interne yield loop maken met count increment?
-#           if count > maxcount:
-#               sys.exit()
-
-        for char in ascii_lowercase:          # Type 2: RightSide = char + (LeftSide reversed)
-            norm_args_plus = norm_args + char
-            for p in partitions(norm_args_plus[::-1]):
-                get_words(p, 0, [])
-
-        norm_args_minus = norm_args[:-1]      # Type 3: RightSide = (LeftSide - char) reversed
-        for p in partitions(norm_args_minus[::-1]):
-            get_words(p, 0, []) 
-
-else:                                         # Single query
+        generate_results(norm_args)
+else:                                       # Single query, also 3 types
     LeftSide = ' '.join(non_option_args)
-    for p in partitions(norm_args[::-1]):     # All partitions of reversed string
-        get_words(p, 0, [])                   # Matching palindrome word-combination
+    generate_results(norm_args)
