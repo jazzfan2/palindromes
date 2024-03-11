@@ -60,11 +60,13 @@ If wished and as per system configuration, above paths and language default may 
 
 Options can be combined but only one (1) language can be set at the time.
 
-One of more [WORD] arguments may be given if the option -S or -R is used,
-to which the program will present matching palindromes if existent, given the option settings.
+If the option -S or -R is used with no [WORD] argument(s),
+the program generates a stream of palindromes, given the option settings.
+If one of more [WORD] arguments are given, the stream of palindromes will be limited to those
+including these words if existent.
 
 If neither option -S nor -R are used, one of more [WORD] arguments *must* be given, to which
-the program will present matching palindromes if existent.
+the program will present palindromes if existent with these words at the left side *exclusively*.
 
 # Author:
 Written by Rob Toscani (rob_toscani@yahoo.com).
