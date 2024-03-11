@@ -2,7 +2,7 @@
 # Name  : palindromes.py
 # Author: Rob Toscani
 # Date  : 08-03-2024
-# Description: Multi-word Palindromes-generator!
+# Description: Multi-word Palindromes-generator
 #
 # Algoritme:
 # 1. Laat één enkele combinatie, of random- of volgordelijke combinaties
@@ -21,7 +21,7 @@
 #              (= middenletter) daarna vóór rechts geplaatst.
 #    - type 3: laatste letter van links (= middenletter) afhalen vóór
 #              omdraaien naar rechts.
-# 5. De resulterende genormaliseerde rechter-string recursief opdelen
+# 5. De resulterende genormaliseerde rechter string recursief opdelen
 #    in alle mogelijke partities.
 # 6. Tijdens het opdelen per partitie vergelijken met bestaande 
 #    (genormaliseerde) woorden.
@@ -31,13 +31,23 @@
 # 8. Indien geen match, huidige recursie afbreken en met nieuwe partitie
 #    beginnen etc.
 # 9. Partitiereeksen met bij elke partitie een bestaand woord zijn
-#    oplossingen voor de rechterhelft.
+#    oplossingen voor het rechterdeel.
 #
+# Bug: 
 # Nog zonder een oplossing voor palindromen met "middenwoorden" 
 # ofwel "overhangs". Deze hebben een zuivere of "scheve" symmetrie 
 # (hierop is vooraf te filteren).
+#
+# Upcoming:
 # Zuivere symmetrie levert een "één-woords-palindroom" op (dus bij -q 1),
 # deze zijn relatief simpel aan de huidige functionaliteit toe te voegen.
+#
+# Disclaimer: word combinations presented by this program as palindrome 
+# solutions can't be expected to be grammatically correct nor to make
+# sense in general.
+#
+# Use pypy3 for enhanced speed.
+# pypy3 ./palindromes.py -a -R -l4 -L18
 #
 # Random-methodes in Python:
 # random.SystemRandom(), os.urandom() zijn zuiverder dan random.random()
@@ -119,7 +129,7 @@ def combine(words, length_remain, non_option_args, sorted_order):
 
 
 def combine_sorted(wordslist, string_length, wordresult):
-    """Generator of lexicographically sorted word-combinations for the left half 
+    """Generator of lexicographically sorted word-combinations for the left side 
        of the palindrome:"""
     for word in wordslist:
         if len(dictionary_reduced[word]) > string_length: # Length of normalized representation
@@ -140,7 +150,7 @@ def combine_sorted(wordslist, string_length, wordresult):
 
 
 def combine_random(wordslist, string_length, included_words):
-    """Generator of random word-combinations for the left half of the palindrome:"""
+    """Generator of random word-combinations for the left side of the palindrome:"""
     factor = len(wordslist)
     for i in range(maxcycles):                # While True loop van maken, bij "count" optie ?
         wordresult = [ x for x in included_words ]
@@ -161,14 +171,14 @@ def combine_random(wordslist, string_length, included_words):
                 break
 
 
-def partitions(string, tupl = ()):
-    """String partition generator for the right half of the palindrome, 
+def partitions(string, Tuple = ()):
+    """String partition generator for the right side of the palindrome, 
        with condition-driven switches:"""
     if string == "":
-        yield tupl
+        yield Tuple
         return
     # Condition:
-    elif len(tupl) >= max_word_qty:           # Skip if too many words (= substrings)
+    elif len(Tuple) >= max_word_qty:          # Skip if too many words (= substrings)
         return
     for i in range(len(string)):
         # Conditions:
@@ -176,7 +186,7 @@ def partitions(string, tupl = ()):
             continue
         if string[:i+1] not in normdict:      # Skip at first word that's not in 'normdict'
             continue
-        yield from partitions(string[i+1:], tupl + (string[:i+1], ))
+        yield from partitions(string[i+1:], Tuple + (string[:i+1], ))
 
 
 def get_words(normlist, index, wordresult):
@@ -300,6 +310,10 @@ for opt, arg in options:
 if random_order:
     sorted_order = 0
 
+# Single query (= neither -S nor -R) without WORD arguments renders no solution:
+if not (random_order or sorted_order) and non_option_args == []:
+    sys.exit()
+
 # Argument words must not contain characters to be excluded:
 for word in non_option_args:
     if contains(word, excl_chars):
@@ -314,9 +328,9 @@ if min_word_len < shortest:
     min_word_len = shortest
 
 # Convert the non-option word arguments to normalized words and join together to string:
-norm_args = normalize(''.join(non_option_args))    # (Filters left half of palindrome only)
+norm_args = normalize(''.join(non_option_args))    # (Filters left side of palindrome only)
 
-# Length of remaining part of left half after subtracting normalized length of argument words: 
+# Length of remaining part of left side after subtracting normalized length of argument words: 
 string_length = palindrome_len//2 - len(norm_args)  # (Relevant for automatic generation only)
 
 # Word quantity for both palindrome halves separately:
@@ -324,7 +338,7 @@ max_word_qty = max_word_qty//2
 
 # Generate word dictionary with all words per unique normalized representation:
 normdict           = {} # Dictionary with key = normalized word, value = word
-dictionary_reduced = {} # Reduced dictionary with key = word, value = normalized word
+dictionary_reduced = {} # Reduced dictionary with key = word, value = normalized words
 dictlist_reduced   = [] # Reduced wordlist
 
 for word in dictionarylist:
