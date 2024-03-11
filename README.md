@@ -76,7 +76,7 @@ to which the program will present palindromes
 if existent containing these words at the left side *exclusively*.
 
 The [WORD] arguments are allowed to be non-existent words,
-and are not limited by option -l.
+and are not limited by option -l (word length).
 
 # Author:
 Written by Rob Toscani (rob_toscani@yahoo.com).
