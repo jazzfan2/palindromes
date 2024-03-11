@@ -217,18 +217,18 @@ def permutelist(list1, list2 = []):
 
 def generate_results(norm_args):
     """Generate results by 3 types of mirroring of the normalized arguments on the left side"""
-#   count = 0
-    for p in partitions(norm_args[::-1]): # Type 1: RightSide = LeftSide reversed
-        get_words(p, 0, [])               # Interne yield loop maken met count increment?
-#       if count > maxcount:
+#   count = 0                             # Type 1: RightSide = LeftSide reversed
+    for p in partitions(norm_args[::-1]): # All partitions of reversed string
+        get_words(p, 0, [])               # Matching palindrome word-combination
+#       if count > maxcount:              # Interne yield loop maken met count increment?
 #           sys.exit()
 
     for char in ascii_lowercase:          # Type 2: RightSide = char + (LeftSide reversed)
         norm_args_plus = norm_args + char
-        for p in partitions(norm_args_plus[::-1]): # All partitions of reversed string
-            get_words(p, 0, [])                    # Matching palindrome word-combination
+        for p in partitions(norm_args_plus[::-1]):
+            get_words(p, 0, [])
 
-    norm_args_minus = norm_args[:-1]      # # Type 3: RightSide = (LeftSide - char) reversed
+    norm_args_minus = norm_args[:-1]      # Type 3: RightSide = (LeftSide - char) reversed
     for p in partitions(norm_args_minus[::-1]):
         get_words(p, 0, []) 
 
