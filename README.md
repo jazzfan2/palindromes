@@ -63,10 +63,12 @@ Options can be combined but only one (1) language can be set at the time.
 If the option -S or -R is used with no [WORD] argument(s),
 the program generates a stream of palindromes, given the option settings.
 If one of more [WORD] arguments are given, the stream of palindromes will be limited to those
-including these words if existent.
+including these words, if found.
 
 If neither option -S nor -R are used, one of more [WORD] arguments *must* be given, to which
 the program will present palindromes if existent with these words at the left side *exclusively*.
+
+The [WORD] arguments are allowed to be non-existent words.
 
 # Author:
 Written by Rob Toscani (rob_toscani@yahoo.com).
