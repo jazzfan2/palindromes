@@ -255,7 +255,7 @@ palindromes.py [-abdfghisSRlLqx] WORD(1) [ ... WORD(n)]
 \t	Filter results to palindromes with <= MAXQTY words
 \t-x CHARS
 \t	Exclude words with any of these CHARS
-Without options -R and -S, only palindromes are produced with WORD args exclusively.
+Without options -R and -S, palindromes with WORD args exclusively are generated.
 """
 
 # Select option(s):
