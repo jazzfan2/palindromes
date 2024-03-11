@@ -6,14 +6,14 @@ palindromes.py is a Python3 program that generates multi-word palindromes, inclu
 
 palindromes.py can be used in two modes:
 - Automatic generating mode (if option -S or -R is given) with optional word argument(s),
-in either:
-    - Sorted-order, rendering solutions in lexicographical word order, or
-    - Random-order
+rendering solutions in either:
+    - Sorted lexicographical word order, or
+    - Random order
 - Query mode (without any of the options mentioned above) with compulsary word argument(s)
 
 palindromes.py offers the possibility to set various properties to manipulate and filter the results,
 such as:
-- the language in which the anagrams are to be generated (default is Dutch);
+- the language in which the palindromes are to be generated (default is Dutch);
 - the minimum length of words in the generated palindromes;
 - the maximum number of words per palindrome(s);
 - any characters to be excluded from the palindrome(s);
@@ -43,28 +43,27 @@ If wished and as per system configuration, above paths and language default may 
 	palindromes.py [-abdfghisSRlLqx] WORD(1) [ ... WORD(n)]
 
 ## Options:
-	-a	American-English
-	-b	British-English
-	-d	Dutch
-	-f	French
-	-g	German
-	-h	Help (this output)
-	-i	Italian
-	-s	Spanish
-	-S	Sorted generation of palindromes incl. WORD args (overridden by -R)
-	-R	Random generation of palindromes incl. WORD args (overrides -S)
-	-l MINWORDLEN	Filter results to palindromes w/ words of at least MINLENGTH
-	-L LENGTH		Filter results to palindromes of approx. LENGTH (only with -S or -R)
-	-q MAXQTY		Filter results to palindromes with <= MAXQTY words
-	-x CHARS		Exclude words with any of these CHARS
-Without options -R and -S, palindromes with WORD args exclusively are generated.
+	-a            American-English
+	-b            British-English
+	-d            Dutch
+	-f            French
+	-g            German
+	-h            Help (this output)
+	-i            Italian
+	-s            Spanish
+	-S            Sorted generation of palindromes incl. WORD args (overridden by -R)
+	-R            Random generation of palindromes incl. WORD args (overrides -S)
+	-l MINWORDLEN Filter results to palindromes w/ words of at least MINLENGTH
+	-L LENGTH     Filter results to palindromes of approx. LENGTH (only with -S or -R)
+	-q MAXQTY     Filter results to palindromes with <= MAXQTY words
+	-x CHARS      Exclude words with any of these CHARS
 
 Options can be combined but only one (1) language can be set at the time.
 
 One of more [WORD] arguments may be given if the option -S or -R is used,
 to which the program will present matching palindromes if existent, given the option settings.
 
-If neither option -S nor -R are used, one of more [WORD] arguments must be given, of which
+If neither option -S nor -R are used, one of more [WORD] arguments *must* be given, to which
 the program will present matching palindromes if existent.
 
 # Author:
