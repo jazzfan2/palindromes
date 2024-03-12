@@ -4,7 +4,7 @@
 # Date  : 12-03-2024
 # Description: Single-word and multi-word Palindromes-generator
 #
-# Algoritme:
+# Algorithm:
 # 0. Print eerst elk individueel woord dat aan de palindroomtest voldoet.
 # 1. Laat een stroom random- (default) of alfabetisch (optioneel)
 #    geordende combinaties van woorden genereren, al dan niet begrensd 
@@ -24,7 +24,7 @@
 #    - type 3: laatste letter van links (= middenletter) afhalen vóór
 #              omdraaien naar rechts.
 # 5. De resulterende genormaliseerde rechter string recursief opdelen
-#    in alle mogelijke partities. >> Dit is de kern van het programma <<<
+#    in alle mogelijke partities. >> Dit is de kern van het programma <<
 # 6. Tijdens het opdelen per partitie vergelijken met bestaande 
 #    (genormaliseerde) woorden.
 # 7. Hiervoor is een dictionary nodig met als keys unieke genormaliseerde
