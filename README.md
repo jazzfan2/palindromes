@@ -9,10 +9,11 @@ including the optional words given - whether or not existing - given as argument
 
 Various properties can be set to manipulate and filter the results, such as:
 - the language in which the palindromes are to be generated (default is Dutch);
-- the minimum length of words in the generated palindromes;
-- the maximum number of words per palindrome(s);
-- any characters to be excluded from the palindrome(s);
-- any existing or non-existing word(s) that must be part of the palindrome(s);
+- approximate palindrome length;
+- the minimum word length in the generated palindromes;
+- the maximum number of words per palindrome;
+- any characters to be excluded from the palindromes;
+- any existing or non-existing word(s) that must be part of the palindromes;
 
 The results are sent to standard output and can be piped to e.g. 'less' or other utilities and applications.
 
