@@ -76,7 +76,7 @@ the output is limited to only the palindromes that contain the given words,
 if any match exists.
 
 In query mode, meaning neither of the options -S nor -R,
-minimally one [WORD] arguments *must* be provided,
+minimally one [WORD] argument *must* be provided,
 resulting in just the avaliable palindromes with those word(s) as the left half.
 
 The [WORD] arguments are allowed to be non-existent words,
