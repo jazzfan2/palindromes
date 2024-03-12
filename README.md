@@ -63,8 +63,8 @@ LENGTH is set to 30 characters by default.
 
 If either the option -S (lexicographically sorted) or -R (random word order) is used,
 the program generates a stream of palindromes,
-limited only by any additional option settings.
-If in addition to that also one or more [WORD] arguments is provided,
+limited only by any further option settings.
+If in addition one or more [WORD] arguments is provided,
 the output is limited to only the palindromes that contain the given words,
 if any match exists.
 
