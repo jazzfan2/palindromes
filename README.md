@@ -68,14 +68,16 @@ Options can be combined but only one (1) language can be set at the time.
 
 LENGTH is set to 30 characters by default.
 
-If either the option -S or -R is used with no [WORD] argument(s),
-the program generates a stream of palindromes, given the option settings.
-If one of more [WORD] arguments are given, the stream of palindromes will be limited to those
-including the given words, if any match exists.
+In automatic generating mode, if either the option -S or -R is used,
+the program generates a stream of palindromes,
+limited only by any additional option settings.
+If also one of more [WORD] arguments is provided,
+the output is limited to only the palindromes that contain the given words,
+if any match exists.
 
-If neither option -S nor -R are used, one of more [WORD] arguments *must* be given,
-to which the program will present palindromes
-if existent containing these words at the left side *exclusively*.
+In query mode, meaning neither of the options -S nor -R,
+minimally one [WORD] arguments *must* be provided,
+resulting in just the avaliable palindromes with those word(s) as the left half.
 
 The [WORD] arguments are allowed to be non-existent words,
 and are not limited by option -l (word length).
