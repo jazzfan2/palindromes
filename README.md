@@ -12,9 +12,11 @@ Various properties can be set to manipulate and filter the results, such as:
 - approximate palindrome length;
 - the minimum word length in the generated palindromes;
 - the maximum number of words per palindrome;
-- any characters to be excluded from the palindromes.
+- any characters to be excluded from the palindromes;
+- the number of palindrome results.
 
-Additionally, sorted (= reproducible) output instead of random order can be optionally chosen.
+Additionally, sorted (= reproducible) output can be chosen as replacement for the default random 
+order output.
 
 The results are sent to standard output and can be piped to e.g. 'less' or other utilities and applications.
 
@@ -67,7 +69,7 @@ As an example, the following command:
 
 	./palindromes.py -a -c20 -l4 -L25
 
-may render the following (random) result:
+may render the following (random) output:
 
 	deleverages Sega reveled
 	derogating Nita gored
