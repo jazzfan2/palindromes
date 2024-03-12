@@ -7,13 +7,6 @@ palindromes.py is a Python3 program that generates single-word and multi-word pa
 in a given language,
 including the optional words given - whether or not existing - given as argument(s).
 
-palindromes.py can be used in two modes:
-1. Automatic generating mode with optional word argument(s),
-rendering a stream of solutions in either:
-    - Sorted lexicographical word order, or
-    - Random word order
-2. Query mode with word argument(s)
-
 Various properties can be set to manipulate and filter the results, such as:
 - the language in which the palindromes are to be generated (default is Dutch);
 - the minimum length of words in the generated palindromes;
@@ -68,16 +61,16 @@ Options can be combined but only one (1) language can be set at the time.
 
 LENGTH is set to 30 characters by default.
 
-In automatic generating mode, if either the option -S or -R is used,
+If either the option -S (lexicographically sorted) or -R (random word order) is used,
 the program generates a stream of palindromes,
 limited only by any additional option settings.
-If also one of more [WORD] arguments is provided,
+If in addition to that also one or more [WORD] arguments is provided,
 the output is limited to only the palindromes that contain the given words,
 if any match exists.
 
-In query mode, meaning neither of the options -S nor -R,
+If neither of the options -S nor -R is used,
 minimally one [WORD] argument *must* be provided,
-resulting in just the avaliable palindromes with those word(s) as the left half.
+to which the results will be filtered.
 
 The [WORD] arguments are allowed to be non-existent words,
 and are not limited by option -l (word length).
