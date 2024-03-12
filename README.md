@@ -15,6 +15,8 @@ Various properties can be set to manipulate and filter the results, such as:
 - any characters to be excluded from the palindromes;
 - any existing or non-existing word(s) that must be part of the palindromes;
 
+Additionally, sorted (= reproducible) output instead of random order can be optionally chosen.
+
 The results are sent to standard output and can be piped to e.g. 'less' or other utilities and applications.
 
 Perequisite is presence on the system of a word list in flat text format
@@ -60,7 +62,7 @@ by modifying the program code accordingly.
 	-S            Sorted instead of random generation of palindromes
 
 Options can be combined but only one (1) language can be set at the time.
-The WORD arguments are optional and used to filter the results.
+The WORD arguments are optional, and are used to filter the results.
 
 As an example, the following command:
 
