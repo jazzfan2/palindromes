@@ -8,11 +8,11 @@ in a given language,
 including the optional words given - whether or not existing - given as argument(s).
 
 palindromes.py can be used in two modes:
-- Automatic generating mode with optional word argument(s),
+1. Automatic generating mode with optional word argument(s),
 rendering a stream of solutions in either:
     - Sorted lexicographical word order, or
     - Random word order
-- Query mode with word argument(s)
+2. Query mode with word argument(s)
 
 Various properties can be set to manipulate and filter the results, such as:
 - the language in which the palindromes are to be generated (default is Dutch);
