@@ -24,7 +24,7 @@
 #    - type 3: laatste letter van links (= middenletter) afhalen vóór
 #              omdraaien naar rechts.
 # 5. De resulterende genormaliseerde rechter string recursief opdelen
-#    in alle mogelijke partities.
+#    in alle mogelijke partities. >> Dit is de kern van het programma <<<
 # 6. Tijdens het opdelen per partitie vergelijken met bestaande 
 #    (genormaliseerde) woorden.
 # 7. Hiervoor is een dictionary nodig met als keys unieke genormaliseerde
@@ -46,7 +46,7 @@
 #
 # Use pypy3 for enhanced speed.
 # Example with American-English words of minimally 4 characters, 
-# palindrome length 18 charactes, 30 results, appended to logfile:
+# palindrome length 18 characters, 30 results, appended to logfile:
 # 	pypy3 ./palindromes.py -a -G -c30 -l4 -L18
 #
 # Random-methodes in Python:
