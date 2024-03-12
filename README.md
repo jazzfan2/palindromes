@@ -5,7 +5,7 @@ in a given language.
 # Description:
 palindromes.py is a Python3 program that generates a random stream of single-word 
 and multi-word palindromes in a given language,
-including the optional words given - whether or not existing - given as argument(s).
+including the optional words - whether or not existing - given as argument(s).
 
 Various properties can be set to manipulate and filter the results, such as:
 - the language in which the palindromes are to be generated (default is Dutch);
