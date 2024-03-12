@@ -12,8 +12,7 @@ Various properties can be set to manipulate and filter the results, such as:
 - approximate palindrome length;
 - the minimum word length in the generated palindromes;
 - the maximum number of words per palindrome;
-- any characters to be excluded from the palindromes;
-- any existing or non-existing word(s) that must be part of the palindromes;
+- any characters to be excluded from the palindromes.
 
 Additionally, sorted (= reproducible) output instead of random order can be optionally chosen.
 
