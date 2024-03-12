@@ -6,10 +6,10 @@
 #
 # Algoritme:
 # 0. Print eerst elk individueel woord dat aan de palindroomtest voldoet.
-# 1. Laat één enkele combinatie, of een stroom random- of alfabetisch
+# 1. Laat een stroom random- (default) of alfabetisch (optioneel)
 #    geordende combinaties van woorden genereren, al dan niet begrensd 
 #    door maximum woord-aantal, minimum woord-lengte en totaal aantal
-#    letters. Optionele logfunctie?
+#    letters.
 # 2. Geef optioneel als argument een reeks woorden die in de palindroom 
 #    moeten zitten. Deze woorden filteren vooralsnog alleen het linkerdeel
 #    van de palindromen.
@@ -45,7 +45,9 @@
 # sense in general.
 #
 # Use pypy3 for enhanced speed.
-# pypy3 ./palindromes.py -a -R -l4 -L18
+# Example with American-English words of minimally 4 characters, 
+# palindrome length 18 charactes, 30 results, appended to logfile:
+# 	pypy3 ./palindromes.py -a -G -c30 -l4 -L18
 #
 # Random-methodes in Python:
 # random.SystemRandom(), os.urandom() zijn zuiverder dan random.random()
@@ -168,7 +170,7 @@ def combine_sorted(wordslist, string_length, wordresult):
 def combine_random(wordslist, string_length, included_words):
     """Generator of random word-combinations for the left side of the palindrome:"""
     factor = len(wordslist)
-    for i in range(maxcycles):                # While True loop van maken, bij "count" optie ?
+    while True:
         wordresult = [ x for x in included_words ]
         length_remain = string_length
         while True:
@@ -213,7 +215,13 @@ def get_words(normlist, index, wordresult):
             get_words(normlist, index + 1, wordresult_new)
         else:
             RightSide = ' '.join(wordresult_new)
-            print(LeftSide, RightSide)   # Ook een generator van maken, om aantallen te tellen?
+            global count
+            count += 1
+            if count > maxcount:
+                sys.exit()
+            print(LeftSide, RightSide)
+            if logmode:
+                append2log(LeftSide + " " + RightSide)
 
 
 def permutelist(list1, list2 = []):
@@ -232,21 +240,23 @@ def permutelist(list1, list2 = []):
 
 def generate_results(norm_args):
     """Generate results by 3 types of mirroring of the normalized arguments on the left side"""
-#   count = 0                             # Type 1: RightSide = LeftSide reversed
-    for p in partitions(norm_args[::-1]): # All partitions of reversed string
+    for p in partitions(norm_args[::-1]): # Type 1: RightSide = LeftSide reversed
         get_words(p, 0, [])               # Matching palindrome word-combination
-#       if count > maxcount:              # Interne yield loop maken met count increment?
-#           sys.exit()
 
     for char in ascii_lowercase:          # Type 2: RightSide = char + (LeftSide reversed)
         norm_args_plus = norm_args + char
-        for p in partitions(norm_args_plus[::-1]):
+        for p in partitions(norm_args_plus[::-1]):    # All partitions of reversed string
             get_words(p, 0, [])
 
     if len(norm_args) > 1:
         norm_args_minus = norm_args[:-1]  # Type 3: RightSide = (LeftSide - char) reversed
         for p in partitions(norm_args_minus[::-1]):
             get_words(p, 0, []) 
+
+
+def append2log(string):
+    with open(logfile, "a") as myfile:
+        myfile.write(string + "\n")
 
 
 language = dictionary_nl = "/usr/share/dict/dutch"
@@ -258,14 +268,16 @@ dictionary_sp = "/usr/share/dict/spanish"
 dictionary_it = "/usr/share/dict/italian"
 
 dictionarylist  = to_list(dictionary_nl, "d")  # Dutch is default language
-norm_args       = "" # Initialization of norm_args
+logfile         = "./logfile"
+logmode         = 0
+norm_args       = ""         # Initialization of norm_args
 min_word_len    = 1
 max_word_qty    = 1000 
-palindrome_len  = 30           # Of *elke* lengte toestaan als optie -L niet wordt opgegeven?
+palindrome_len  = 30         # Of *elke* lengte toestaan als optie -L niet wordt opgegeven?
 excl_chars      = "0123456789"
 sorted_order    = 0
-random_order    = 0
-maxcycles       = 10000000     # Een "count" optie van maken, als max aantal oplossingen?
+count           = 0
+maxcount        = 10000000
 
 # Regular expressions:
 a_acc = re.compile('[áàäâåÁÀÄÂ]')
@@ -281,7 +293,7 @@ slashtag = re.compile('\/[^/]*')
 # Text printed if -h option (help) or a non-existing option has been given:
 usage = """
 Usage:
-palindromes.py [-abdfghisSRlLqx] WORD(1) [ ... WORD(n)]
+palindromes.py [-abdfghiscFlLqxS] WORD(1) [ ... WORD(n)]
 \t-a	American-English
 \t-b	British-English
 \t-d	Dutch
@@ -290,22 +302,24 @@ palindromes.py [-abdfghisSRlLqx] WORD(1) [ ... WORD(n)]
 \t-h	Help (this output)
 \t-i	Italian
 \t-s	Spanish
-\t-S	Sorted generation of palindromes incl. WORD args (overridden by -R)
-\t-R	Random generation of palindromes incl. WORD args (overrides -S)
+\t-c COUNT
+\t	Limit output to COUNT results
+\t-F
+\t	Write to logfile
 \t-l MINWORDLEN
 \t	Filter results to palindromes w/ words of at least MINLENGTH
 \t-L LENGTH
-\t	Filter results to palindromes of approx. LENGTH (only with -S or -R)
+\t	Filter results to palindromes of approx. LENGTH (default 30)
 \t-q MAXQTY
 \t	Filter results to palindromes with <= MAXQTY words
-\t-x CHARS
-\t	Exclude words with any of these CHARS
-Without options -R and -S, palindromes with WORD args exclusively are generated.
+\t-x EXCLCHARS
+\t	Exclude words with any of these EXCLCHARS
+\t-S	Sorted palindrome generation incl. optional WORD arg(s)
 """
 
 # Select option(s):
 try:
-    options, non_option_args = getopt.getopt(sys.argv[1:], 'abdfghisSRl:L:q:x:')
+    options, non_option_args = getopt.getopt(sys.argv[1:], 'abdfghisc:Fl:L:q:x:S')
 except:
     print(usage)
     sys.exit()
@@ -328,10 +342,10 @@ for opt, arg in options:
         dictionarylist = to_list(dictionary_it, "i")
     elif opt in ('-s'):
         dictionarylist = to_list(dictionary_sp, "s")
-    elif opt in ('-S'):
-        sorted_order = 1
-    elif opt in ('-R'):
-        random_order = 1
+    elif opt in ('-c'):
+        maxcount = int(arg)
+    elif opt in ('-F'):
+        logmode = 1
     elif opt in ('-l'):
         min_word_len = int(arg)
     elif opt in ('-L'):
@@ -340,14 +354,9 @@ for opt, arg in options:
         max_word_qty = int(arg)
     elif opt in ('-x'):
         excl_chars = excl_chars + arg
+    elif opt in ('-S'):
+        sorted_order = 1
 
-# Either sorted- or random-order automatic multi-sentence generation:
-if random_order:
-    sorted_order = 0
-
-# Single query (= neither -S nor -R) without WORD arguments renders no solution:
-if not (random_order or sorted_order) and non_option_args == []:
-    sys.exit()
 
 # Argument words must not contain characters to be excluded:
 for word in non_option_args:
@@ -378,6 +387,8 @@ for word in dictionarylist:
         continue
     if test_palindrome(normalized):
         print(word)
+        if logmode:
+            append2log(word)
     dictionary_reduced[word] = normalized
     dictlist_reduced.append(word)
     if normalized in normdict:
@@ -391,11 +402,7 @@ string_length = palindrome_len//2 - len(norm_args)  # (Relevant for automatic ge
 # Word quantity for both palindrome halves separately:
 max_word_qty = max_word_qty//2
 
-if sorted_order or random_order:            # Automatic palindromes generation: 3 types
-    for combination in combine(dictlist_reduced, string_length, non_option_args, sorted_order):
-        LeftSide = ' '.join(combination)
-        norm_args = normalize(LeftSide)
-        generate_results(norm_args)
-else:                                       # Single query, also 3 types
-    LeftSide = ' '.join(non_option_args)
+for combination in combine(dictlist_reduced, string_length, non_option_args, sorted_order):
+    LeftSide = ' '.join(combination)
+    norm_args = normalize(LeftSide)
     generate_results(norm_args)

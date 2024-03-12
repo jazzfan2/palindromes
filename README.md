@@ -3,8 +3,8 @@ palindromes.py - Program that generates single-word and multi-word palindromes
 in a given language.
 
 # Description:
-palindromes.py is a Python3 program that generates (a stream of) single-word and multi-word 
-palindromes in a given language,
+palindromes.py is a Python3 program that generates a random stream of single-word 
+and multi-word palindromes in a given language,
 including the optional words given - whether or not existing - given as argument(s).
 
 Various properties can be set to manipulate and filter the results, such as:
@@ -40,7 +40,7 @@ by modifying the program code accordingly.
 
 ## Usage:
 
-	palindromes.py [-abdfghisSRlLqx] WORD(1) [ ... WORD(n)]
+	palindromes.py [-abdfghiscFlLqxS] WORD(1) [ ... WORD(n)]
 
 ## Options:
 	-a            American-English
@@ -51,30 +51,44 @@ by modifying the program code accordingly.
 	-h            Help (this output)
 	-i            Italian
 	-s            Spanish
-	-S            Sorted generation of palindromes incl. WORD args (overridden by -R)
-	-R            Random generation of palindromes incl. WORD args (overrides -S)
-	-l MINWORDLEN Filter results to palindromes w/ words of at least MINLENGTH
-	-L LENGTH     Filter results to palindromes of approx. LENGTH (only with -S or -R)
+	-c COUNT      Limit output to COUNT results
+	-F            Write to logfile
+	-l MINWORDLEN Filter results to palindromes w/ words of at least MINWORDLEN
+	-L LENGTH     Filter results to palindromes of approx. LENGTH (default 30)
 	-q MAXQTY     Filter results to palindromes with <= MAXQTY words
-	-x CHARS      Exclude words with any of these CHARS
+	-x EXCLCHARS  Exclude words with any of these EXCLCHARS
+	-S            Sorted instead of random generation of palindromes
 
 Options can be combined but only one (1) language can be set at the time.
+The WORD arguments are optional and used to filter the results.
 
-LENGTH is set to 30 characters by default.
+As an example, the following command:
 
-If either the option -S (lexicographically sorted) or -R (random word order) is used,
-the program generates a stream of palindromes,
-limited only by any further option settings.
-If in addition one or more [WORD] arguments is provided,
-the output is limited to only the palindromes that contain the given words,
-if any match exists.
+	./palindromes.py -a -c20 -l4 -L25
 
-If neither of the options -S nor -R is used,
-minimally one [WORD] argument *must* be provided,
-to which the results will be filtered.
+may render the following (random) result:
 
-The [WORD] arguments are allowed to be non-existent words,
-and are not limited by option -l (word length).
+	deleverages Sega reveled
+	derogating Nita gored
+	remarking Agni Kramer
+	débutantes Etna tubed
+	débutante Etna tubed
+	ululating Nita Lulu
+	spoonerism siren oops
+	allegro boga Iago Borg Ella
+	allegro boga sago Borg Ella
+	noontime's emit noon
+	gardener's Rene drag
+	gulp's orb's Bros plug
+	redraw drab bard warder
+	stalwarts straw lats
+	procedure rude Corp
+	procedure rude corp
+	snits GNU's Sung's tin's
+	snits GNU's Sung's tins
+	spillways yawl lip's
+	spillways yawl lips
+
 
 # Author:
 Written by Rob Toscani (rob_toscani@yahoo.com).
