@@ -1,8 +1,10 @@
 # Name: palindromes.py
-palindromes.py - Program that generates (a stream of) multi-word palindromes in a given language.
+palindromes.py - Program that generates (a stream of) single-word and multi-word palindromes
+in a given language.
 
 # Description:
-palindromes.py is a Python3 program that generates multi-word palindromes in a given language,
+palindromes.py is a Python3 program that generates single-word and multi-word palindromes
+in a given language,
 including the optional words given - whether or not existing - given as argument(s).
 
 palindromes.py can be used in two modes:
@@ -65,6 +67,8 @@ by modifying the program code accordingly.
 	-x CHARS      Exclude words with any of these CHARS
 
 Options can be combined but only one (1) language can be set at the time.
+
+LENGTH is set to 30 characters by default.
 
 If either the option -S or -R is used with no [WORD] argument(s),
 the program generates a stream of palindromes, given the option settings.

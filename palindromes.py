@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 # Name  : palindromes.py
 # Author: Rob Toscani
-# Date  : 08-03-2024
-# Description: Multi-word Palindromes-generator
+# Date  : 12-03-2024
+# Description: Single-word and multi-word Palindromes-generator
 #
 # Algoritme:
-# 1. Laat één enkele combinatie, of random- of volgordelijke combinaties
-#    woorden genereren, al dan niet begrensd door maximum woord-aantal,
-#    minimum woord-lengte en totaal aantal letters. Optionele logfunctie?
+# 0. Print eerst elk individueel woord dat aan de palindroomtest voldoet.
+# 1. Laat één enkele combinatie, of een stroom random- of alfabetisch
+#    geordende combinaties van woorden genereren, al dan niet begrensd 
+#    door maximum woord-aantal, minimum woord-lengte en totaal aantal
+#    letters. Optionele logfunctie?
 # 2. Geef optioneel als argument een reeks woorden die in de palindroom 
 #    moeten zitten. Deze woorden filteren vooralsnog alleen het linkerdeel
 #    van de palindromen.
@@ -34,13 +36,9 @@
 #    oplossingen voor het rechterdeel.
 #
 # Bug: 
-# Nog zonder een oplossing voor palindromen met "middenwoorden" 
+# Nog zonder oplossing voor multi-word palindromen met "middenwoorden" 
 # ofwel "overhangs". Deze hebben een zuivere of "scheve" symmetrie 
 # (hierop is vooraf te filteren).
-#
-# Upcoming:
-# Zuivere symmetrie levert een "één-woords-palindroom" op (dus bij -q 1),
-# deze zijn relatief simpel aan de huidige functionaliteit toe te voegen.
 #
 # Disclaimer: word combinations presented by this program as palindrome 
 # solutions can't be expected to be grammatically correct nor to make
@@ -106,6 +104,23 @@ def normalize(string):
                 c_ced.sub('c', \
                 intpunct.sub('', string))))))))
     return string.lower()
+
+
+def test_palindrome(normalized):
+    """Test if word is a palindrome and meets all additional conditions:"""
+    if normalized == normalized[::-1] and len(normalized) == palindrome_len and \
+       max_word_qty > 0:
+        if len(non_option_args) == 1:
+            if normalized == norm_args:
+                return True
+            else:
+                return False
+        elif len(non_option_args) > 1:
+            return False
+        else:
+            return True
+    else:
+        return False
 
 
 def contains(string, characters):
@@ -228,9 +243,10 @@ def generate_results(norm_args):
         for p in partitions(norm_args_plus[::-1]):
             get_words(p, 0, [])
 
-    norm_args_minus = norm_args[:-1]      # Type 3: RightSide = (LeftSide - char) reversed
-    for p in partitions(norm_args_minus[::-1]):
-        get_words(p, 0, []) 
+    if len(norm_args) > 1:
+        norm_args_minus = norm_args[:-1]  # Type 3: RightSide = (LeftSide - char) reversed
+        for p in partitions(norm_args_minus[::-1]):
+            get_words(p, 0, []) 
 
 
 language = dictionary_nl = "/usr/share/dict/dutch"
@@ -243,9 +259,9 @@ dictionary_it = "/usr/share/dict/italian"
 
 dictionarylist  = to_list(dictionary_nl, "d")  # Dutch is default language
 norm_args       = "" # Initialization of norm_args
-min_word_len    = 2  # Blocks single letters to appear in result, unless so chosen by option -l
+min_word_len    = 1
 max_word_qty    = 1000 
-palindrome_len  = 30
+palindrome_len  = 30           # Of *elke* lengte toestaan als optie -L niet wordt opgegeven?
 excl_chars      = "0123456789"
 sorted_order    = 0
 random_order    = 0
@@ -349,12 +365,6 @@ if min_word_len < shortest:
 # Convert the non-option word arguments to normalized words and join together to string:
 norm_args = normalize(''.join(non_option_args))    # (Filters left side of palindrome only)
 
-# Length of remaining part of left side after subtracting normalized length of argument words: 
-string_length = palindrome_len//2 - len(norm_args)  # (Relevant for automatic generation only)
-
-# Word quantity for both palindrome halves separately:
-max_word_qty = max_word_qty//2
-
 # Generate word dictionary with all words per unique normalized representation:
 normdict           = {} # Dictionary with key = normalized word, value = word
 dictionary_reduced = {} # Reduced dictionary with key = word, value = normalized words
@@ -366,12 +376,20 @@ for word in dictionarylist:
     normalized = normalize(word)
     if len(normalized) < min_word_len:
         continue
+    if test_palindrome(normalized):
+        print(word)
     dictionary_reduced[word] = normalized
     dictlist_reduced.append(word)
     if normalized in normdict:
         normdict[normalized].append(word)
     else:
         normdict[normalized] = [word]
+
+# Length of remaining part of left side after subtracting normalized length of argument words: 
+string_length = palindrome_len//2 - len(norm_args)  # (Relevant for automatic generation only)
+
+# Word quantity for both palindrome halves separately:
+max_word_qty = max_word_qty//2
 
 if sorted_order or random_order:            # Automatic palindromes generation: 3 types
     for combination in combine(dictlist_reduced, string_length, non_option_args, sorted_order):
