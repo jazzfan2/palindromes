@@ -10,8 +10,8 @@ including the optional words given - whether or not existing - given as argument
 palindromes.py can be used in two modes:
 1. Automatic generating mode with optional word argument(s),
 rendering a stream of solutions in either:
-    - Sorted lexicographical word order, or
-    - Random word order
+- Sorted lexicographical word order, or
+- Random word order
 2. Query mode with word argument(s)
 
 Various properties can be set to manipulate and filter the results, such as:
