@@ -9,7 +9,7 @@ palindromes.py can be used in two modes:
 - Automatic generating mode (if either option -S or -R is given) with optional word argument(s),
 rendering a stream of solutions in either:
     - Sorted lexicographical word order, or
-    - Random order
+    - Random word order
 - Query mode (without any of the options mentioned above) with compulsary word argument(s)
 
 palindromes.py offers the possibility to set various properties to manipulate
