@@ -55,7 +55,7 @@ by modifying the program code accordingly.
 	-i            Italian
 	-s            Spanish
 	-c COUNT      Limit output to COUNT results
-	-F            Write to logfile
+	-F            Write output to logfile
 	-l MINWORDLEN Filter results to palindromes w/ words of at least MINWORDLEN
 	-L LENGTH     Filter results to palindromes of approx. LENGTH (default 30)
 	-q MAXQTY     Filter results to palindromes with <= MAXQTY words

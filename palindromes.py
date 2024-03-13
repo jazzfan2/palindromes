@@ -108,6 +108,14 @@ def normalize(string):
     return string.lower()
 
 
+def contains(string, characters):
+    """Check if string contains any of characters:"""
+    for char in characters:
+        if char in string:
+            return True                       # one of more of characters is in string
+    return False                              # none of characters is in string
+
+
 def test_palindrome(normalized):
     """Test if word is a palindrome and meets all additional conditions:"""
     if normalized == normalized[::-1] and len(normalized) == palindrome_len and \
@@ -123,14 +131,6 @@ def test_palindrome(normalized):
             return True
     else:
         return False
-
-
-def contains(string, characters):
-    """Check if string contains any of characters:"""
-    for char in characters:
-        if char in string:
-            return True                       # one of more of characters is in string
-    return False                              # none of characters is in string
 
 
 def combine(words, length_remain, non_option_args, sorted_order):
@@ -189,6 +189,36 @@ def combine_random(wordslist, string_length, included_words):
                 break
 
 
+def permutelist(list1, list2 = []):
+    """Generate and yield all list permutations"""
+    items = list1
+    out = list2
+    if items == []:
+        yield out
+        return
+    previous = []
+    for i in range(len(items)):
+        if items[i] not in previous:
+            previous.append(items[i])
+            yield from permutelist(items[0:i] + items[i+1:], out + items[i:i+1])
+
+
+def generate_results(norm_args):
+    """Generate results by 3 types of mirroring of the normalized arguments on the left side"""
+    for p in partitions(norm_args[::-1]): # Type 1: RightSide = LeftSide reversed
+        get_words(p, 0, [])               # Matching palindrome word-combination
+
+    for char in ascii_lowercase:          # Type 2: RightSide = char + (LeftSide reversed)
+        norm_args_plus = norm_args + char
+        for p in partitions(norm_args_plus[::-1]):    # All partitions of reversed string
+            get_words(p, 0, [])
+
+    if len(norm_args) > 1:
+        norm_args_minus = norm_args[:-1]  # Type 3: RightSide = (LeftSide - char) reversed
+        for p in partitions(norm_args_minus[::-1]):
+            get_words(p, 0, []) 
+
+
 def partitions(string, Tuple = ()):
     """String partition generator for the right side of the palindrome, 
        with condition-driven switches:"""
@@ -224,42 +254,13 @@ def get_words(normlist, index, wordresult):
                 append2log(LeftSide + " " + RightSide)
 
 
-def permutelist(list1, list2 = []):
-    """Generate and yield all list permutations"""
-    items = list1
-    out = list2
-    if items == []:
-        yield out
-        return
-    previous = []
-    for i in range(len(items)):
-        if items[i] not in previous:
-            previous.append(items[i])
-            yield from permutelist(items[0:i] + items[i+1:], out + items[i:i+1])
-
-
-def generate_results(norm_args):
-    """Generate results by 3 types of mirroring of the normalized arguments on the left side"""
-    for p in partitions(norm_args[::-1]): # Type 1: RightSide = LeftSide reversed
-        get_words(p, 0, [])               # Matching palindrome word-combination
-
-    for char in ascii_lowercase:          # Type 2: RightSide = char + (LeftSide reversed)
-        norm_args_plus = norm_args + char
-        for p in partitions(norm_args_plus[::-1]):    # All partitions of reversed string
-            get_words(p, 0, [])
-
-    if len(norm_args) > 1:
-        norm_args_minus = norm_args[:-1]  # Type 3: RightSide = (LeftSide - char) reversed
-        for p in partitions(norm_args_minus[::-1]):
-            get_words(p, 0, []) 
-
-
 def append2log(string):
+    """Write results to logfile:"""
     with open(logfile, "a") as myfile:
         myfile.write(string + "\n")
 
 
-language = dictionary_nl = "/usr/share/dict/dutch"
+dictionary_nl = "/usr/share/dict/dutch"
 dictionary_am = "/usr/share/dict/american-english"
 dictionary_br = "/usr/share/dict/british-english"
 dictionary_de = "/usr/share/hunspell/de_DE_frami.dic"
@@ -305,7 +306,7 @@ palindromes.py [-abdfghiscFlLqxS] WORD(1) [ ... WORD(n)]
 \t-c COUNT
 \t	Limit output to COUNT results
 \t-F
-\t	Write to logfile
+\t	Write output to logfile
 \t-l MINWORDLEN
 \t	Filter results to palindromes w/ words of at least MINWORDLEN
 \t-L LENGTH
