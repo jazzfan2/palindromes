@@ -94,6 +94,14 @@ def to_list(file, language):
         return dictionarylist
 
 
+def contains(string, characters):
+    """Check if string contains any of characters:"""
+    for char in characters:
+        if char in string:
+            return True                       # one of more of characters is in string
+    return False                              # none of characters is in string
+
+
 def normalize(string):
     """ By means of regular expressions, normalize all characters to lower case,
         remove accent marks and other non-alphanumeric characters:"""
@@ -106,14 +114,6 @@ def normalize(string):
                 c_ced.sub('c', \
                 intpunct.sub('', string))))))))
     return string.lower()
-
-
-def contains(string, characters):
-    """Check if string contains any of characters:"""
-    for char in characters:
-        if char in string:
-            return True                       # one of more of characters is in string
-    return False                              # none of characters is in string
 
 
 def test_palindrome(normalized):
