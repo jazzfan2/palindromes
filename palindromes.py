@@ -307,7 +307,7 @@ palindromes.py [-abdfghiscFlLqxS] WORD(1) [ ... WORD(n)]
 \t-F
 \t	Write to logfile
 \t-l MINWORDLEN
-\t	Filter results to palindromes w/ words of at least MINLENGTH
+\t	Filter results to palindromes w/ words of at least MINWORDLEN
 \t-L LENGTH
 \t	Filter results to palindromes of approx. LENGTH (default 30)
 \t-q MAXQTY
