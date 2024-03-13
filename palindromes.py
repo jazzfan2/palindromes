@@ -36,9 +36,9 @@
 #    oplossingen voor het rechterdeel.
 #
 # Bug: 
-# Nog zonder oplossing voor multi-word palindromen met "middenwoorden" 
-# ofwel "overhangs". Deze hebben een zuivere of "scheve" symmetrie 
-# (hierop is vooraf te filteren).
+# Deze versie maakt (nog) geen multi-word palindromen met "middenwoorden" 
+# ofwel "overhangs". Deze hebben een zuivere of "scheve" symmetrie,
+# waarop vooraf is te filteren. (Nog in ontwikkeling.)
 #
 # Disclaimer: word combinations presented by this program as palindrome 
 # solutions can't be expected to be grammatically correct nor to make
