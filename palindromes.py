@@ -47,7 +47,7 @@
 # Use pypy3 for enhanced speed.
 # Example with American-English words of minimally 4 characters, 
 # palindrome length 18 characters, 30 results, appended to logfile:
-# 	pypy3 ./palindromes.py -a -G -c30 -l4 -L18
+# 	pypy3 ./palindromes.py -a -F -c30 -l4 -L18
 #
 # Random-methodes in Python:
 # random.SystemRandom(), os.urandom() zijn zuiverder dan random.random()
