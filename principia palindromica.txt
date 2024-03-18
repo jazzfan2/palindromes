@@ -1,9 +1,9 @@
 Beschouwing middenwoorden in palindroomzin
 ==========================================
 
-Scheefheid is het aantal karakters dat uit de *genormaliseerde representatie van het woord* moet
-worden verwijderd (hierna "scheve karakters") voordat bij het restant van de string een 
-symmetrie wordt gevonden d.m.v. de vergelijking: [code]
+We definiëren de "Scheefheid" van een willekeurig woord als het aantal karakters dat uit de
+*genormaliseerde representatie van het woord* moet worden verwijderd (hierna "scheve karakters")
+voordat bij het restant van de string een symmetrie wordt gevonden d.m.v. de vergelijking: [code]
 
 	string == string[::-1]
 
