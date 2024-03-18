@@ -142,6 +142,7 @@ combinaties worden aangeboden in een juiste volgorde.
 
 
 Wat betekent dit alles nu voor het algoritme van palindromes.py ?
+=================================================================
 
 1. Van alle woorden alle mogelijke scheefheden verzamelen d.m.v. een nieuwe functie of  
    uitgebreide versie van de functie "test_palindrome()". De scheefheden bepalen uit de 
