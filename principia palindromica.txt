@@ -130,7 +130,8 @@ van de stand van het middenwoord);
 - Vervolgens het 3e, met verder weer alles als hiervoor;
 - Volgende woord, etc. etc. tot alle woorden zijn geweest.
 
-In geval van geen middenwoord komen alle zoekwoorden in volgorde voor zover passend altijd aan de linkerkant. Dat dan telkens weer gevolgd door permutatie en spiegeling naar rechts zoals nu
+In geval van geen middenwoord komen alle zoekwoorden in volgorde voor zover passend altijd aan
+de linkerkant. Dat dan telkens weer gevolgd door permutatie en spiegeling naar rechts zoals nu
 ook al het geval is, waarna de resultaten onderling links <--> rechts worden verwisseld 
 (zie boven).
 
