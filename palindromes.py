@@ -137,7 +137,7 @@ def combine(words, length_remain, non_option_args, sorted_order):
     """Combine meta-function:"""
     if min_word_len <= 0 or length_remain < min_word_len or \
        len(non_option_args) >= max_word_qty:
-        if len(non_option_args):
+        if len(non_option_args):             # If number of arguments > 0
             yield non_option_args
             return
     elif sorted_order:
