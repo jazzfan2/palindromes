@@ -124,13 +124,13 @@ De behandeling van zoekwoorden wordt nu als volgt:
 In geval van wel een middenwoord wordt de plaatsing van de zoekwoorden (de reeks non-option
 arguments) roulerend gemaakt: 
 - Eerst het 1e woord op middenpositie (in al zijn symmetriestanden/scheefheden), de overige in
-volgorde voor zover passend op de primaire zijde (dat kan dus links of rechts zijn afhankelijk
+volgorde - indien passend - op de primaire zijde (dat kan dus links of rechts zijn afhankelijk
 van de stand van het middenwoord);
 - Daarna het 2e woord op de middenpositie, en de overige weer in volgorde op de primaire zijde;
 - Vervolgens het 3e, met verder weer alles als hiervoor;
 - Volgende woord, etc. etc. tot alle woorden zijn geweest.
 
-In geval van geen middenwoord komen alle zoekwoorden in volgorde voor zover passend altijd aan
+In geval van geen middenwoord komen alle zoekwoorden in volgorde - indien passend - altijd aan
 de linkerkant. Dat dan telkens weer gevolgd door permutatie en spiegeling naar rechts zoals nu
 ook al het geval is, waarna de resultaten onderling links <--> rechts worden verwisseld 
 (zie boven).
@@ -165,14 +165,14 @@ Wat betekent dit alles nu voor het algoritme van palindromes.py ?
       De indeling van functie generate_results() hierop ook aanpassen (o.m. de type-indeling).
 
 5. Indien er woord-argumenten ("non_option_args") zijn gegeven, gaan deze in de *geen*
-   *middenwoord* modus alle in ongewijzigde volgorde naar het begin van de primaire zijde
-   (voor zover passend). Dat is bij geen middenwoord altijd de linker zijde.
+   *middenwoord* modus alle in ongewijzigde volgorde naar het begin van de primaire zijde,
+   indien passend. Dat is bij geen middenwoord altijd de linker zijde.
    -> Invoegen in: binnen de loop van (4.)
 
 6. In de *wel middenwoord* modus daarentegen gaat een nieuwe functie d.m.v. een loop door de
    reeks woord-argumenten heen. Daarbij wordt telkens een ander woord van de
    reeks als middenwoord aangewezen en gaan de overige woorden in ongewijzigde volgorde naar
-   het begin van de primaire zijde (voor zover passend). 
+   het begin van de primaire zijde, indien passend.
    -> Invoegen in: Dit wordt een toegevoegde loop binnen de loop van (4.)
 
 7. Een loop gaat per middenwoord nu langs alle scheefheden ("standen"), en per geval bepaalt het
