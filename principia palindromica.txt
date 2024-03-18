@@ -220,7 +220,7 @@ Wat betekent dit alles nu voor het algoritme van palindromes.py ?
     genormaliseerde representatie ophalen en spiegelen naar secundair rechts, niet andersom.
    -> Invoegen in: is al huidige functionaliteit, nu gestuurd door (4.) en (12.)
 
-16. Haal van de genormaliseerde woordcombinaties in het secondaire deel alle passende woorden
+16. Haal van de genormaliseerde woordcombinaties in het secundaire deel alle passende woorden
     op (zoals dat reeds in het bestaande programma gebeurt).
     -> Is al onderdeel van functie get_words(), mogelijk iets aanvullen.
 
