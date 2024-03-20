@@ -294,7 +294,7 @@ slashtag = re.compile('\/[^/]*')
 # Text printed if -h option (help) or a non-existing option has been given:
 usage = """
 Usage:
-palindromes.py [-abdfghiscFlLqxS] WORD(1) [ ... WORD(n)]
+palindromes.py [-abdfghiscFlLqxS] [WORD(1) [ ... WORD(n)]]
 \t-a	American-English
 \t-b	British-English
 \t-d	Dutch

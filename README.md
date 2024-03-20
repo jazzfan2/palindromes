@@ -43,7 +43,7 @@ by modifying the program code accordingly.
 
 ## Usage:
 
-	palindromes.py [-abdfghiscFlLqxS] WORD(1) [ ... WORD(n)]
+	palindromes.py [-abdfghiscFlLqxS] [WORD(1) [ ... WORD(n)]]
 
 ## Options:
 	-a            American-English
