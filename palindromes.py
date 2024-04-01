@@ -217,8 +217,7 @@ def combine_sorted(wordslist, string_length, wordresult, searchcount, midword, s
 
 
 def combine_random(wordslist, length_remain, wordresult, searchcount, midword, s, max_qty):
-    """Generator of random word-combinations for the middle and primary side of the
-       palindrome:"""
+    """Generator of random word-combinations for the primary side of the palindrome:"""
     while True:
         if length_remain < min_word_len:
             if len(wordresult) or len(midword):
