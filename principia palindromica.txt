@@ -93,8 +93,8 @@ Bij geen middenwoord (huidige type 1), dus indien: [code]
 
 [/code] geldt hetzelfde als bij zuiver symmetrische middenwoorden.
 
-Of een (zuiver of scheef) middenwoord met lengte W en scheefheid S wel of niet past in de
-ingestelde palindroom(zin-)lengte L, dient als volgt vastgesteld te worden:
+Of een (zuiver of scheef symmetrisch) middenwoord met lengte W en scheefheid S wel of niet 
+past in de ingestelde palindroom(zin-)lengte L, dient als volgt vastgesteld te worden:
 
 1. Bij *1-punts symmetrie* (geeft palindroom-zin met oneven lengte): [code]
 
@@ -217,7 +217,7 @@ Wat betekent dit alles nu voor het algoritme van palindromes.py ?
     Resultaat is een linkerdeel met aangevuld *eind*, dat vervolgens wordt gepartitioneerd.
    -> Invoegen in: blok 406 e.v. of onderdeel van gemodificeerde functie generate_results()
 
-15. Bij geen of zuiver middenwoord (scheefheid = 0) alleen van primair links de 
+15. Bij geen of zuiver symmetrisch middenwoord (scheefheid = 0) alleen van primair links de 
     genormaliseerde representatie ophalen en spiegelen naar secundair rechts, niet andersom.
    -> Invoegen in: is al huidige functionaliteit, nu gestuurd door (4.) en (12.)
 
@@ -226,6 +226,6 @@ Wat betekent dit alles nu voor het algoritme van palindromes.py ?
     -> Is al onderdeel van functie get_words(), mogelijk iets aanvullen.
 
 17. Het resultaat wordt nu samengesteld uit linkerdeel + middendeel + rechterdeel.
-    Bij geen of zuiver middenwoord worden daarna tevens nog het linker- en rechterdeel
+    Bij geen of zuiver symmetrisch middenwoord worden daarna tevens nog het linker- en rechterdeel
     verwisseld als tweede resultaat.
     -> Invoegen in: functie get_words()
