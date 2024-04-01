@@ -14,7 +14,7 @@
 #    from the dictionary list as the 'mid-word';
 # 4. Place it in the middle of the palindrome around each of its 
 #    symmetrical substrings at beginning or end, as represented by 
-#    predetermined 'skew' values; 
+#    pre-determined 'skew' values; 
 # 5. Pick words from the dictionary list, in random or alphabetical
 #    order; place as many that fit on the positions on the primary
 #    side within total length and word quantity bounds, and if
