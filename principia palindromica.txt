@@ -11,12 +11,12 @@ voordat bij het restant van de string een symmetrie wordt gevonden d.m.v. de ver
 palindroom-zin geplaatst.
 
 Definities voor het kwantificeren van de "scheefheid": 
-- Verwijderen vanaf begin van het woord (links) tot symmetrie levert een scheefheid met een
-negatief getal voor het aantal karakters op.
 - Verwijderen vanaf eind van het woord (rechts) tot symmetrie levert een scheefheid met een
+negatief getal voor het aantal karakters op.
+- Verwijderen vanaf begin van het woord (links) tot symmetrie levert een scheefheid met een
 positief getal voor het aantal karakters op.
 
-(Bovenstaande definities zijn arbitrair en zouden eventueel nog omgedraaid kunnen worden.)
+(Bovenstaande definities zijn arbitrair, hadden ook omgekeerd kunnen zijn, maar zijn zo gekozen.)
 
 Zo bezien kunnen bij elk woord minimaal 2 symmetrische strings worden gevonden, als er maar
 genoeg karakters als scheefheid worden verwijderd, nl.:
@@ -84,7 +84,7 @@ combinatie van woorden aan de rechter zijde.
 
 Bij zuiver symmetrische middenwoorden kan naar beide richtingen worden gespiegeld voorafgaand 
 aan partionering. Praktisch is dan alleen 1x dit proces uit te voeren, b.v. van links (primair)
-naar rechts (secudair) en daar partitioneren, en daarna de resultaten op 2 manieren presenteren:
+naar rechts (secundair) en daar partitioneren, en daarna de resultaten op 2 manieren presenteren:
 wel en niet verwisseld.
 
 Bij geen middenwoord (huidige type 1), dus indien: [code]
@@ -116,8 +116,8 @@ De beschikbare lengte P van de woordcombinatie aan primaire zijde wordt dan: [co
 
 	P = ( L - W - |S| ) // 2 
 
-[/code] Het teken van S bepaalt of die primaire zijde aan de linkerkant (S negatief) of de
-rechterkant (S positief) is.
+[/code] Het teken van S bepaalt of die primaire zijde aan de  of de rechterkant (S negatief)
+linkerkant (S positief) is.
 Let op: woordlengte W bepalen uit de genormaliseerde representatie van het woord.
 
 De behandeling van zoekwoorden wordt nu als volgt:
@@ -150,8 +150,8 @@ Wat betekent dit alles nu voor het algoritme van palindromes.py ?
    -> Invoegen in: het blok op regels 383 - 398
 
 2. Hiervoor een nieuwe dictionary bijhouden, met als key het woord (niet genormaliseerd!) en 
-   als value een lijst met alle scheefheids-waarden, uitgedrukt in een negatief (links meer) of
-   positief (rechts meer) heel getal, of 0 (zuiver symmetrisch).
+   als value een lijst met alle scheefheids-waarden, uitgedrukt in een negatief (rechts meer) of
+   positief (links meer) heel getal, of 0 (zuiver symmetrisch).
    -> Invoegen in: het blok op regels 383 - 398
 
 3. Neem ook de woorden in de non_option_arguments mee in deze scheefheids-waarden-dictionary.
@@ -179,8 +179,8 @@ Wat betekent dit alles nu voor het algoritme van palindromes.py ?
 7. Een loop gaat per middenwoord nu langs alle scheefheden ("standen"), en per geval bepaalt het
    teken welke zijde naast het middenwoord de primaire zijde (de "krappe
    zijde") is:
-   - linkerzijde bij negatieve S
-   - rechterzijde bij positieve S
+   - rechterzijde bij negatieve S
+   - linkerzijde bij positieve S
    -> Invoegen in: binnen de loop van (4.)
 
 8. Tevens per stand bepalen of het middenwoord past binnen de gestelde palindroomzinlengte,
@@ -207,12 +207,12 @@ Wat betekent dit alles nu voor het algoritme van palindromes.py ?
     worden gebruikt om via spiegeling de secundaire zijde te genereren.
     -> Invoegen in: blok 406 e.v. of onderdeel van gemodificeerde functie generate_results()
 
-13. Bij negatieve scheefheid worden evenzoveel genormaliseerde karakters van het *begin* van
+13. Bij positieve scheefheid worden evenzoveel genormaliseerde karakters van het *begin* van
     het middenwoord meegespiegeld met het *einde* van het linkerdeel.
     Resultaat is een rechterdeel met aangevuld *begin*, dat vervolgens wordt gepartitioneerd.
     -> Invoegen in: blok 406 e.v. of onderdeel van gemodificeerde functie generate_results()
    
-14. Bij positieve scheefheid worden evenzoveel genormaliseerde karakters van het *eind* van
+14. Bij negatieve scheefheid worden evenzoveel genormaliseerde karakters van het *eind* van
     het middenwoord meegespiegeld met het *begin* van het rechterdeel.
     Resultaat is een linkerdeel met aangevuld *eind*, dat vervolgens wordt gepartitioneerd.
    -> Invoegen in: blok 406 e.v. of onderdeel van gemodificeerde functie generate_results()

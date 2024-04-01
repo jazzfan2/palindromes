@@ -1,44 +1,44 @@
 #!/usr/bin/env python3
 # Name  : palindromes.py
 # Author: Rob Toscani
-# Date  : 12-03-2024
+# Date  : 29-03-2024
 # Description: Single-word and multi-word Palindromes-generator
 #
 # Algorithm:
-# 0. Print eerst elk individueel woord dat aan de palindroomtest voldoet.
-# 1. Laat een stroom random- (default) of alfabetisch (optioneel)
-#    geordende combinaties van woorden genereren, al dan niet begrensd 
-#    door maximum woord-aantal, minimum woord-lengte en totaal aantal
-#    letters.
-# 2. Geef optioneel als argument een reeks woorden die in de palindroom 
-#    moeten zitten. Deze woorden filteren vooralsnog alleen het linkerdeel
-#    van de palindromen.
-# 3. De woordcombinaties aaneenschakelen tot één string en normaliseren
-#    (accenten en interpunctie verwijderen, kleine letters).
-# 4. Drie typen spiegelingen om het rechterdeel van het linkerdeel af
-#    te leiden:
-#    - type 1: rechter string is gelijk aan links omgedraaid.
-#              Geen middenletter.
-#    - type 2: idem als type 1, met extra letter uit de reeks a t/m z
-#              (= middenletter) daarna vóór rechts geplaatst.
-#    - type 3: laatste letter van links (= middenletter) afhalen vóór
-#              omdraaien naar rechts.
-# 5. De resulterende genormaliseerde rechter string recursief opdelen
-#    in alle mogelijke partities. >> Dit is de kern van het programma <<
-# 6. Tijdens het opdelen per partitie vergelijken met bestaande 
-#    (genormaliseerde) woorden.
-# 7. Hiervoor is een dictionary nodig met als keys unieke genormaliseerde
-#    woorden en als value een lijst daaraan equivalente echte woorden,
-#    incl. interpunctie, accenten en case.
-# 8. Indien geen match, huidige recursie afbreken en met nieuwe partitie
-#    beginnen etc.
-# 9. Partitiereeksen met bij elke partitie een bestaand woord zijn
-#    oplossingen voor het rechterdeel.
-#
-# Bug: 
-# Deze versie maakt (nog) geen multi-word palindromen met "middenwoorden" 
-# ofwel "overhangs". Deze hebben een zuivere of "scheve" symmetrie,
-# waarop vooraf is te filteren. (Nog in ontwikkeling.)
+# 1. Limit the word database by omitting all words that are too short or
+#    that contain excluded characters.
+# 2. If any 'search-words' are given, these are placed in advance, the
+#    first one as the 'mid-word', any others on the available positions
+#    on the 'primary side';
+# 3. If no 'search-words' are given, select an empty string or a word
+#    from the dictionary list as the 'mid-word';
+# 4. Place it in the middle of the palindrome around each of its 
+#    symmetrical substrings at beginning or end, as represented by 
+#    predetermined 'skew' values; 
+# 5. Pick words from the dictionary list, in random or alphabetical
+#    order; place as many that fit on the positions on the primary
+#    side within total length and word quantity bounds, and if
+#    not already occupied by search words;
+# 6. Permute the primary word combination if it contains search-words;
+# 7. Normalize each primary word combination (lower case, accent marks
+#    and punctuation removed) and remove the spaces;
+# 8. Mirror the part on the primary side plus the 'skew' part of the
+#    middle word to the secondary side;
+# 9. Recursively divide the resulting normalized secondary string
+#    into all possible substring partitions;
+# 10. While dividing, compare each partition with all existing unique 
+#     normalized words;
+# 11. These are looked up as keys in a dictionary. If a match is found,
+#     all related real words (including punctuation, accent marks and
+#     case) are a candidate for placement on that position;
+# 12. If no match is found, abort the current recursion, backtrack to
+#     the latest match, and create new partitions from there, etc.;
+# 13. If each and every partition of a string matches an existing word,
+#     the full string qualifies as a solution for the secondary side;
+# 14. Deduce from the sign of the midword skew which of the primary and
+#     secondary parts comes on the left and which on the right;
+# 15. Position the primary and secondary parts around the middle word
+#     accordingly to generate the palindrome result.
 #
 # Disclaimer: word combinations presented by this program as palindrome 
 # solutions can't be expected to be grammatically correct nor to make
@@ -48,10 +48,6 @@
 # Example with American-English words of minimally 4 characters, 
 # palindrome length 18 characters, 30 results, appended to logfile:
 # 	pypy3 ./palindromes.py -a -F -c30 -l4 -L18
-#
-# Random-methodes in Python:
-# random.SystemRandom(), os.urandom() zijn zuiverder dan random.random()
-# maar trager.
 #
 ######################################################################################
 #
@@ -74,6 +70,7 @@
 #
 import getopt
 import sys
+import math
 import re
 import os
 import random
@@ -86,7 +83,7 @@ def to_list(file, language):
     if language == "g": # German language file
                         # Not UTF-8 encoded and contains superfluous text, so re-encode:
         with open(file,'r', encoding='ISO-8859-1') as language:
-             dictionarylist = [word.replace("\n","") for word in language.readlines()]
+            dictionarylist = [word.replace("\n","") for word in language.readlines()]
         return [ slashtag.sub('', line) for line in dictionarylist if line[0] != "#" ]
     else:
         with open(file,'r') as language:
@@ -98,8 +95,8 @@ def contains(string, characters):
     """Check if string contains any of characters:"""
     for char in characters:
         if char in string:
-            return True                       # one of more of characters is in string
-    return False                              # none of characters is in string
+            return True          # one of more of characters is in string
+    return False                 # none of characters is in string
 
 
 def normalize(string):
@@ -116,77 +113,129 @@ def normalize(string):
     return string.lower()
 
 
-def test_palindrome(normalized):
-    """Test if word is a palindrome and meets all additional conditions:"""
-    if normalized == normalized[::-1] and len(normalized) == palindrome_len and \
-       max_word_qty > 0:
-        if len(non_option_args) == 1:
-            if normalized == norm_args:
-                return True
-            else:
-                return False
-        elif len(non_option_args) > 1:
-            return False
+def get_skews(string):
+    """Get all 'skews' of a string, being the number of characters that must be removed
+       at either end to result into the remaining (end)string being symmetric:"""
+    skews = []
+    for s in range(0, len(string)):
+        l = len(string)
+        if string[:l-s] == string[:l-s][::-1]:
+            skews.append(-s)      # Skew = negative if chars are removed from the right
+        if s > 0 and string[s:] == string[s:][::-1]:
+            skews.append(s)       # Skew = positive if chars are removed from the left
+    return skews                  # List of skews, sorted by increasing absolute value
+
+
+def combine(wordslist, total_len, search_words):
+    """Mid-word and search-words (pre-)combinator:"""
+    midword_mode = 1        # If midword_mode = 1, palindrome includes a midword, else not
+    restricted = 0          # If restricted (= 1), midword won't use a search word
+    i = -1                  # Wordslist index initialization
+    j = 0                   # Search-word list index initialization 
+    while True:
+        search_remain = [ x for x in search_words ]   # Remaining search words
+        if sorted_order:                              # Option -S (sorted order)       
+            i += 1                                    # Incremental wordslist index, 
         else:
-            return True
-    else:
-        return False
+            i = int(random.random() * len(wordslist)) # Random wordslist index, 
+        if midword_mode:
+            if len(search_words) == 0 or restricted:
+                midword = wordslist[i]                # Pick from dictionary list
+            else:
+                midword = search_words[j]             # Pick from search words      
+                search_remain.remove(search_words[j])
+            # Available word quantity for primary side, minus midword:
+            max_qty = (max_word_qty - 1) // 2
+        else:
+            midword = ""
+            # Available word quantity for primary side, if no midword:
+            max_qty = max_word_qty // 2
+        w = len(dictionary_reduced[midword])
+        # Place the midword in the middle by all of its symmetry centers, by varying 'skew':
+        for s in symmetry_skews[midword]:
+            # Verify if the midword fits within the palindrome length:
+            if (w % 2 == s % 2 and (w - abs(s))//2 + abs(s) > total_len//2) or \
+                   (w % 2 != s % 2 and (w - abs(s))//2 + abs(s) > (total_len - 1)//2):
+            # Skews are sorted by rising absolute value, so we can quit loop once 1x false:
+                break
+            # Calculate remaining length for the words on the primary side:
+            length_remain = (total_len - w - abs(s)) // 2
+            wordresult = []
+            # Pre-fill the primary side with as many remaining and fitting search-words:
+            for k in range(len(search_remain)):
+                if len(wordresult) == max_qty:
+                    break
+                if length_remain >= len(dictionary_reduced[search_remain[k]]):
+                    wordresult.append(search_remain[k])
+                    length_remain = length_remain - len(dictionary_reduced[search_remain[k]])
+                else:
+                    continue
+            # Stop if none of the search words fits the primary side nor matches the midword:
+            if len(search_words) and midword not in search_words and not len(wordresult):
+                break
+
+            # Call the appropriate word combinator for the primary side:
+            if sorted_order:
+                yield from combine_sorted(wordslist, length_remain, wordresult,
+                                          len(wordresult), midword, s, max_qty)
+            else:
+                yield from combine_random(wordslist, length_remain, wordresult,
+                                          len(wordresult), midword, s, max_qty)
+
+        # Throw switches to decide whether of not to place a midword in the next palindrome:
+        midword_mode = (midword_mode + 1) % 5   # Choice: skip midword after each 5 midwords 
+        
+        # ... and whether or not to place a search-word in the middle of the next palindrome:
+        if len(search_words) and midword_mode:
+            restricted = (restricted + 1) % length_ratio
+            if not restricted:
+                j = (j + 1) % len(search_words) # The search words are available for the midword
 
 
-def combine(words, length_remain, non_option_args, sorted_order):
-    """Combine meta-function:"""
-    if min_word_len <= 0 or length_remain < min_word_len or \
-       len(non_option_args) >= max_word_qty:
-        if len(non_option_args):             # If number of arguments > 0
-            yield non_option_args
-            return
-    elif sorted_order:
-        yield from combine_sorted(words, length_remain, non_option_args)
-    else:
-        yield from combine_random(words, length_remain, non_option_args)
-
-
-def combine_sorted(wordslist, string_length, wordresult):
-    """Generator of lexicographically sorted word-combinations for the left side 
+def combine_sorted(wordslist, string_length, wordresult, searchcount, midword, s, max_qty):
+    """Generator of lexicographically sorted word-combinations for the primary side 
        of the palindrome:"""
     for word in wordslist:
         if len(dictionary_reduced[word]) > string_length: # Length of normalized representation
             continue
         wordresult_new = wordresult + [word]
+        if len(wordresult_new) > max_qty:
+            return
         length_remain = string_length - len(dictionary_reduced[word])
-        if len(wordresult_new) == max_word_qty or length_remain < min_word_len:
-            if len(non_option_args) > 0:            # If there are included words (global)
-                for p in permutelist(wordresult_new):
-                    yield p
+        if length_remain < min_word_len:
+            if searchcount:    # If primary side contained search words when function was called
+                for permutation in permutelist(wordresult_new):
+                    yield (permutation, midword, s)
             else:
-                yield(wordresult_new)
+                yield (wordresult_new, midword, s)
         else:
-            yield from combine_sorted(wordslist, length_remain, wordresult_new)
+            yield from combine_sorted(wordslist, length_remain, wordresult_new, \
+                                      searchcount, midword, s, max_qty)
     else:
-        if len(wordresult):
-            yield wordresult
+        if len(wordresult) or len(midword):
+            yield (wordresult, midword, s)
 
 
-def combine_random(wordslist, string_length, included_words):
-    """Generator of random word-combinations for the left side of the palindrome:"""
-    factor = len(wordslist)
+def combine_random(wordslist, length_remain, wordresult, searchcount, midword, s, max_qty):
+    """Generator of random word-combinations for the middle and primary side of the
+       palindrome:"""
     while True:
-        wordresult = [ x for x in included_words ]
-        length_remain = string_length
-        while True:
-            index = int(random.random() * factor)
-            word = wordslist[index]
-            if len(dictionary_reduced[word]) > length_remain:
-                continue
-            wordresult = wordresult + [word]
-            length_remain = length_remain - len(dictionary_reduced[word])
-            if len(wordresult) == max_word_qty or length_remain < min_word_len:
-                if len(included_words) > 0:   # If there are included words
-                    for p in permutelist(wordresult):
-                        yield p
+        if length_remain < min_word_len:
+            if len(wordresult) or len(midword):
+                if searchcount:    # If primary side contains search words
+                    for permutation in permutelist(wordresult):
+                        yield (permutation, midword, s)
                 else:
-                    yield(wordresult)
-                break
+                    yield (wordresult, midword, s)
+            break
+        i = int(random.random() * len(wordslist))
+        word = wordslist[i]
+        if len(dictionary_reduced[word]) > length_remain:
+            continue
+        wordresult = wordresult + [word]
+        if len(wordresult) > max_qty:
+            break
+        length_remain = length_remain - len(dictionary_reduced[word])
 
 
 def permutelist(list1, list2 = []):
@@ -203,61 +252,56 @@ def permutelist(list1, list2 = []):
             yield from permutelist(items[0:i] + items[i+1:], out + items[i:i+1])
 
 
-def generate_results(norm_args):
-    """Generate results by 3 types of mirroring of the normalized arguments on the left side"""
-    for p in partitions(norm_args[::-1]): # Type 1: RightSide = LeftSide reversed
-        get_words(p, 0, [])               # Matching palindrome word-combination
-
-    for char in ascii_lowercase:          # Type 2: RightSide = char + (LeftSide reversed)
-        norm_args_plus = norm_args + char
-        for p in partitions(norm_args_plus[::-1]):    # All partitions of reversed string
-            get_words(p, 0, [])
-
-    if len(norm_args) > 1:
-        norm_args_minus = norm_args[:-1]  # Type 3: RightSide = (LeftSide - char) reversed
-        for p in partitions(norm_args_minus[::-1]):
-            get_words(p, 0, []) 
-
-
 def partitions(string, Tuple = ()):
-    """String partition generator for the right side of the palindrome, 
+    """String partition generator for the secundary side of the palindrome, 
        with condition-driven switches:"""
     if string == "":
         yield Tuple
         return
-    # Condition:
-    elif len(Tuple) >= max_word_qty:          # Skip if too many words (= substrings)
+    # Quantity conditions:
+    elif len(midword) == 0 and len(Tuple) >= max_word_qty // 2:
         return
+    elif len(midword) > 0  and len(Tuple) >= (max_word_qty - 1) // 2:
+        return                                    # Skip if too many words (= substrings)
     for i in range(len(string)):
-        # Conditions:
-        if len(string[:i+1]) < min_word_len:  # Skip at first word that's too short 
-            continue
-        if string[:i+1] not in normdict:      # Skip at first word that's not in 'normdict'
+        # Length and existence conditions:
+        if len(string[:i+1]) < min_word_len:      # Skip at first word that's too short 
+            if string[:i+1] not in norm_args_set: # ... unless it's a search word!
+                continue
+        if string[:i+1] not in normdict:          # Skip at first word that's not in 'normdict'
             continue
         yield from partitions(string[i+1:], Tuple + (string[:i+1], ))
 
 
-def get_words(normlist, index, wordresult):
-    """Print all word combinations for the given combinations of normalized words:"""
-    for word in normdict[normlist[index]]:
-        wordresult_new = wordresult + [word]
-        if index < len(normlist) - 1:
-            get_words(normlist, index + 1, wordresult_new)
+def make_palindromes(norm_partition_list, index, wordresult):
+    """Generate palindromes from primary words, midword and normalized secundary partitions:"""
+    for word in normdict[norm_partition_list[index]]:
+        wordresult_new = wordresult + [word]      # Get secundary words from partitions
+        if index < len(norm_partition_list) - 1:
+            make_palindromes(norm_partition_list, index + 1, wordresult_new)
         else:
-            RightSide = ' '.join(wordresult_new)
+            secundary = ' '.join(wordresult_new)
             global count
             count += 1
             if count > maxcount:
                 sys.exit()
-            print(LeftSide, RightSide)
-            if logmode:
-                append2log(LeftSide + " " + RightSide)
+            space1 = (len(primary) != 0) * " "
+            space2 = (len(midword) != 0) * " "
+            space3 = (len(secundary) != 0) * " "
+            if skew >= 0:
+                print_palindrome(primary + space1 + midword + space2 + secundary)
+                if skew == 0:
+                    print_palindrome(secundary + space3 + midword + space2 + primary)
+            else:
+                print_palindrome(secundary + space3 + midword + space2 + primary)
 
 
-def append2log(string):
-    """Write results to logfile:"""
-    with open(logfile, "a") as myfile:
-        myfile.write(string + "\n")
+def print_palindrome(string):
+    """Write results to standard output and optionally to logfile:"""
+    print(string)
+    if logmode:
+        with open(logfile, "a") as myfile:
+            myfile.write(string + "\n")
 
 
 dictionary_nl = "/usr/share/dict/dutch"
@@ -271,14 +315,13 @@ dictionary_it = "/usr/share/dict/italian"
 dictionarylist  = to_list(dictionary_nl, "d")  # Dutch is default language
 logfile         = "./logfile"
 logmode         = 0
-norm_args       = ""         # Initialization of norm_args
 min_word_len    = 1
 max_word_qty    = 1000 
-palindrome_len  = 30         # Of *elke* lengte toestaan als optie -L niet wordt opgegeven?
+total_len  = 30           # Or allow *each* length if option -L is not given?
 excl_chars      = "0123456789"
 sorted_order    = 0
 count           = 0
-maxcount        = 10000000
+maxcount        = math.inf
 
 # Regular expressions:
 a_acc = re.compile('[áàäâåÁÀÄÂ]')
@@ -305,17 +348,16 @@ palindromes.py [-abdfghiscFlLqxS] [WORD(1) [ ... WORD(n)]]
 \t-s	Spanish
 \t-c COUNT
 \t	Limit output to COUNT results
-\t-F
-\t	Write output to logfile
+\t-F	Write output to logfile
 \t-l MINWORDLEN
 \t	Filter results to palindromes w/ words of at least MINWORDLEN
 \t-L LENGTH
 \t	Filter results to palindromes of approx. LENGTH (default 30)
 \t-q MAXQTY
-\t	Filter results to palindromes with <= MAXQTY words
+\t	Filter results to palindromes with <= approx. MAXQTY words
 \t-x EXCLCHARS
 \t	Exclude words with any of these EXCLCHARS
-\t-S	Sorted palindrome generation incl. optional WORD arg(s)
+\t-S	Sorted palindrome generation
 """
 
 # Select option(s):
@@ -350,7 +392,7 @@ for opt, arg in options:
     elif opt in ('-l'):
         min_word_len = int(arg)
     elif opt in ('-L'):
-        palindrome_len = int(arg)
+        total_len = int(arg)
     elif opt in ('-q'):
         max_word_qty = int(arg)
     elif opt in ('-x'):
@@ -359,10 +401,9 @@ for opt, arg in options:
         sorted_order = 1
 
 
-# Argument words must not contain characters to be excluded:
-for word in non_option_args:
-    if contains(word, excl_chars):
-        sys.exit()
+# Prevent negative min_word_len, total_len < min_word_len or max word quantity < 1:
+if min_word_len <= 0 or total_len < min_word_len or max_word_qty < 1:
+    sys.exit()    
 
 # Prevent min_word_len to be smaller than shortest word in list: 
 shortest = 10
@@ -373,23 +414,42 @@ if min_word_len < shortest:
     min_word_len = shortest
 
 # Convert the non-option word arguments to normalized words and join together to string:
-norm_args = normalize(''.join(non_option_args))    # (Filters left side of palindrome only)
+norm_args = normalize(''.join(non_option_args))
+
+# Length ratio between half palindrome and search string, to be used in combine() function: 
+if len(non_option_args):
+    length_ratio = max(1, total_len//(2*len(norm_args)))
 
 # Generate word dictionary with all words per unique normalized representation:
-normdict           = {} # Dictionary with key = normalized word, value = word
-dictionary_reduced = {} # Reduced dictionary with key = word, value = normalized words
-dictlist_reduced   = [] # Reduced wordlist
+normdict           = {}    # Dictionary with key = normalized word, value = list of words
+symmetry_skews     = {}    # Symmetry 'skews' dictionary
+dictionary_reduced = {}    # Reduced dictionary with key = word, value = normalized word
+dictlist_reduced   = []    # Reduced wordlist
+norm_args_set      = set() # Set of normalized non_option_args
 
-for word in dictionarylist:
+# The empty midword has one 'skew': 0
+symmetry_skews[""] = [0]
+
+# The empty (normalized) word:
+dictionary_reduced[""] = ""
+
+# Prepare all databases:
+for word in dictionarylist + non_option_args:
+    total_len_fault = 0
     if contains(word, excl_chars):
+        if word in non_option_args:
+            sys.exit()
         continue
     normalized = normalize(word)
-    if len(normalized) < min_word_len:
+    if len(normalized) > total_len or (max_word_qty == 1 and len(normalized) < total_len):
+        total_len_fault = 1
+    if word in non_option_args:
+        if total_len_fault:
+            sys.exit()
+        norm_args_set.add(word)
+    elif len(normalized) < min_word_len or total_len_fault:
         continue
-    if test_palindrome(normalized):
-        print(word)
-        if logmode:
-            append2log(word)
+    symmetry_skews[word] = get_skews(normalized)
     dictionary_reduced[word] = normalized
     dictlist_reduced.append(word)
     if normalized in normdict:
@@ -397,13 +457,36 @@ for word in dictionarylist:
     else:
         normdict[normalized] = [word]
 
-# Length of remaining part of left side after subtracting normalized length of argument words: 
-string_length = palindrome_len//2 - len(norm_args)  # (Relevant for automatic generation only)
+# If option -q = 1 or option -l > palindrome-length/2, print all single-word palindromes:
+if max_word_qty == 1 or min_word_len * 2 > total_len:
+    for word in symmetry_skews:
+        if 0 in symmetry_skews[word] and \
+                (len(non_option_args) == 0 or word in non_option_args):
+            print_palindrome(word)
+    sys.exit()
 
-# Word quantity for both palindrome halves separately:
-max_word_qty = max_word_qty//2
+# Otherwise, combine the dictionary words to multi-word palindromes:
+for (combination, midword, skew) in combine(dictlist_reduced, total_len, non_option_args):
+    primary = ' '.join(combination)
+    norm_primary = normalize(primary)
+    norm_midword = dictionary_reduced[midword]
 
-for combination in combine(dictlist_reduced, string_length, non_option_args, sorted_order):
-    LeftSide = ' '.join(combination)
-    norm_args = normalize(LeftSide)
-    generate_results(norm_args)
+    s = skew
+    w = len(norm_midword)
+    p = len(norm_primary)
+
+    if skew >= 0:
+        norm_string = (norm_primary + norm_midword)[:p+abs(s)]
+    elif skew < 0:
+        norm_string = (norm_midword + norm_primary)[w-abs(s):]
+
+    if len(norm_string) == 0:             # Iff primary is empty AND midword is palindrome!
+        print_palindrome(midword)         # Hence result is the palindrome midword only
+        count += 1
+        if count > maxcount:
+            sys.exit()
+        continue
+
+    # Generate results by mirroring the normalized string from primary to secundary side
+    for p in partitions(norm_string[::-1]): # Reversed string partitioned
+        make_palindromes(p, 0, [])          # Generate matching palindrome word-combination
