@@ -116,8 +116,8 @@ De beschikbare lengte P van de woordcombinatie aan primaire zijde wordt dan: [co
 
 	P = ( L - W - |S| ) // 2 
 
-[/code] Het teken van S bepaalt of die primaire zijde aan de  of de rechterkant (S negatief)
-linkerkant (S positief) is.
+[/code] Het teken van S bepaalt of die primaire zijde aan de rechterkant (S negatief)
+of de linkerkant (S positief) is.
 Let op: woordlengte W bepalen uit de genormaliseerde representatie van het woord.
 
 De behandeling van zoekwoorden wordt nu als volgt:
