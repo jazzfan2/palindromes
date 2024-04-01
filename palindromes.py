@@ -29,8 +29,8 @@
 # 10. While dividing, compare each partition with all existing unique 
 #     normalized words;
 # 11. These are looked up as keys in a dictionary. If a match is found,
-#     all related real words (including punctuation, accent marks and
-#     case) are a candidate for placement on that position;
+#     all associated real words (including punctuation, accent marks
+#     and case) are a candidate for placement on that position;
 # 12. If no match is found, abort the current recursion, backtrack to
 #     the latest match, and create new partitions from there, etc.;
 # 13. If each and every partition of a string matches an existing word,
