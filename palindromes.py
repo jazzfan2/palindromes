@@ -12,9 +12,9 @@
 #    on the 'primary side';
 # 3. If no 'search-words' are given, select an empty string or a word
 #    from the dictionary list as the 'mid-word';
-# 4. Place it in the middle of the palindrome around each of its 
-#    symmetrical substrings at beginning or end, as represented by 
-#    pre-determined 'skew' values; 
+# 4. Place it in the middle of the palindrome around each of its
+#    symmetrical substrings at beginning or end, as represented by
+#    pre-determined 'skew' values;
 # 5. Pick words from the dictionary list, in random or alphabetical
 #    order; place as many that fit on the positions on the primary
 #    side within total length and word quantity bounds, and if
@@ -26,7 +26,7 @@
 #    middle word to the secondary side;
 # 9. Recursively divide the resulting normalized secondary string
 #    into all possible substring partitions;
-# 10. While dividing, compare each partition with all existing unique 
+# 10. While dividing, compare each partition with all existing unique
 #     normalized words;
 # 11. These are looked up as keys in a dictionary. If a match is found,
 #     all associated real words (including punctuation, accent marks
@@ -40,12 +40,12 @@
 # 15. Position the primary and secondary parts around the middle word
 #     accordingly to generate the palindrome result.
 #
-# Disclaimer: word combinations presented by this program as palindrome 
+# Disclaimer: word combinations presented by this program as palindrome
 # solutions can't be expected to be grammatically correct nor to make
 # sense in general.
 #
 # Use pypy3 for enhanced speed.
-# Example with American-English words of minimally 4 characters, 
+# Example with American-English words of minimally 4 characters,
 # palindrome length 18 characters, 30 results, appended to logfile:
 # 	pypy3 ./palindromes.py -a -F -c30 -l4 -L18
 #
@@ -131,18 +131,18 @@ def combine(wordslist, total_len, search_words):
     midword_mode = 1        # If midword_mode = 1, palindrome includes a midword, else not
     restricted = 0          # If restricted (= 1), midword won't use a search word
     i = -1                  # Wordslist index initialization
-    j = 0                   # Search-word list index initialization 
+    j = 0                   # Search-word list index initialization
     while True:
         search_remain = [ x for x in search_words ]   # Remaining search words
-        if sorted_order:                              # Option -S (sorted order)       
-            i += 1                                    # Incremental wordslist index, 
+        if sorted_order:                              # Option -S (sorted order)
+            i += 1                                    # Incremental wordslist index,
         else:
-            i = int(random.random() * len(wordslist)) # Random wordslist index, 
+            i = int(random.random() * len(wordslist)) # Random wordslist index,
         if midword_mode:
             if len(search_words) == 0 or restricted:
                 midword = wordslist[i]                # Pick from dictionary list
             else:
-                midword = search_words[j]             # Pick from search words      
+                midword = search_words[j]             # Pick from search words
                 search_remain.remove(search_words[j])
             # Available word quantity for primary side, minus midword:
             max_qty = (max_word_qty - 1) // 2
@@ -183,8 +183,8 @@ def combine(wordslist, total_len, search_words):
                                           len(wordresult), midword, s, max_qty)
 
         # Throw switches to decide whether of not to place a midword in the next palindrome:
-        midword_mode = (midword_mode + 1) % 5   # Choice: skip midword after each 5 midwords 
-        
+        midword_mode = (midword_mode + 1) % 5   # Choice: skip midword after each 5 midwords
+
         # ... and whether or not to place a search-word in the middle of the next palindrome:
         if len(search_words) and midword_mode:
             restricted = (restricted + 1) % length_ratio
@@ -193,7 +193,7 @@ def combine(wordslist, total_len, search_words):
 
 
 def combine_sorted(wordslist, string_length, wordresult, searchcount, midword, s, max_qty):
-    """Generator of lexicographically sorted word-combinations for the primary side 
+    """Generator of lexicographically sorted word-combinations for the primary side
        of the palindrome:"""
     for word in wordslist:
         if len(dictionary_reduced[word]) > string_length: # Length of normalized representation
@@ -252,7 +252,7 @@ def permutelist(list1, list2 = []):
 
 
 def partitions(string, Tuple = ()):
-    """String partition generator for the secundary side of the palindrome, 
+    """String partition generator for the secundary side of the palindrome,
        with condition-driven switches:"""
     if string == "":
         yield Tuple
@@ -264,7 +264,7 @@ def partitions(string, Tuple = ()):
         return                                    # Skip if too many words (= substrings)
     for i in range(len(string)):
         # Length and existence conditions:
-        if len(string[:i+1]) < min_word_len:      # Skip at first word that's too short 
+        if len(string[:i+1]) < min_word_len:      # Skip at first word that's too short
             if string[:i+1] not in norm_args_set: # ... unless it's a search word!
                 continue
         if string[:i+1] not in normdict:          # Skip at first word that's not in 'normdict'
@@ -315,7 +315,7 @@ dictionarylist  = to_list(dictionary_nl, "d")  # Dutch is default language
 logfile         = "./logfile"
 logmode         = 0
 min_word_len    = 1
-max_word_qty    = 1000 
+max_word_qty    = 1000
 total_len       = 30           # Or allow *each* length if option -L is not given?
 excl_chars      = "0123456789"
 sorted_order    = 0
@@ -402,9 +402,9 @@ for opt, arg in options:
 
 # Prevent negative min_word_len, total_len < min_word_len or max word quantity < 1:
 if min_word_len <= 0 or total_len < min_word_len or max_word_qty < 1:
-    sys.exit()    
+    sys.exit()
 
-# Prevent min_word_len to be smaller than shortest word in list: 
+# Prevent min_word_len to be smaller than shortest word in list:
 shortest = 10
 for word in dictionarylist:
     if len(word) < shortest:
@@ -415,7 +415,7 @@ if min_word_len < shortest:
 # Convert the non-option word arguments to normalized words and join together to string:
 norm_args = normalize(''.join(non_option_args))
 
-# Length ratio between half palindrome and search string, to be used in combine() function: 
+# Length ratio between half palindrome and search string, to be used in combine() function:
 if len(non_option_args):
     length_ratio = max(1, total_len//(2*len(norm_args)))
 
