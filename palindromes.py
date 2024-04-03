@@ -72,10 +72,7 @@ import getopt
 import sys
 import math
 import re
-import os
 import random
-import time
-from string import ascii_lowercase
 
 
 def to_list(file, language):
