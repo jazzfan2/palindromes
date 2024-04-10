@@ -71,19 +71,19 @@ karakters steken dan of meer naar links of meer naar rechts uit vanaf het middel
 Als ze naar rechts meer uitsteken dan links, moeten de overige passende woordcombinaties eerst 
 aan de "krappe" zijde dus rechts worden geplaatst - we noemen in dit geval rechts de "primaire 
 zijde" - en dan naar links worden gespiegeld ("secundaire zijde", met aanvulling van de scheve 
-karakters van het middenwoord daarna), waarna het resultaat daar wordt gepartioneerd.
+karakters van het middenwoord daarna), waarna het resultaat daar wordt gepartitioneerd.
 
 Als ze naar links meer uitsteken dan rechts, moeten de overige passende woordcombinaties eerst
 aan de "krappe" zijde dus links worden geplaatst - nu is links de "primaire zijde"-  en dan naar 
 rechts worden gespiegeld ("secundaire zijde, met aanvulling van de scheve karakters van het
-middenwoord daarvoor), waarna het resultaat daar wordt gepartioneerd.
+middenwoord daarvoor), waarna het resultaat daar wordt gepartitioneerd.
 
 Na verificatie van de partities tegen de woordenlijst is de resulterende palindroomzin dan een
 samenvoeging van de combinatie van woorden aan de linker zijde, het middenwoord en de  
 combinatie van woorden aan de rechter zijde.
 
 Bij zuiver symmetrische middenwoorden kan naar beide richtingen worden gespiegeld voorafgaand 
-aan partionering. Praktisch is dan alleen 1x dit proces uit te voeren, b.v. van links (primair)
+aan partitionering. Praktisch is dan alleen 1x dit proces uit te voeren, b.v. van links (primair)
 naar rechts (secundair) en daar partitioneren, en daarna de resultaten op 2 manieren presenteren:
 wel en niet verwisseld.
 
