@@ -330,7 +330,7 @@ c_ced = re.compile('[çÇ]')
 intpunct = re.compile('[\'\" :.&-]')
 slashtag = re.compile('\/[^/]*')
 
-# Text printed if -h option (help) or a non-existing option has been given:
+# Text printed if -h option (help) or a non-existent option has been given:
 usage = """
 Usage:
 palindromes.py [-abdfghiscFlLqxS] [WORD(1) [ ... WORD(n)]]
