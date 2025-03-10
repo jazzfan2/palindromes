@@ -73,6 +73,8 @@ import sys
 import math
 import re
 import random
+import unicodedata
+from unidecode import unidecode
 
 
 def to_list(file, language):
@@ -96,7 +98,22 @@ def contains(string, characters):
     return False                 # none of characters is in string
 
 
+def __normalize(string):
+    """ Normalize all characters to lower case, remove accent marks and other non-alphanumeric characters
+        https://stackoverflow.com/questions/517923/what-is-the-best-way-to-remove-accents-normalize-in-a-python-unicode-string"""
+    string = ''.join(c for c in unicodedata.normalize('NFD', string.lower())
+                  if unicodedata.category(c) != 'Mn')
+    return intpunct.sub('', string)
+
+
 def normalize(string):
+    """ Normalize all characters to lower case, remove accent marks and other non-alphanumeric characters
+        https://stackoverflow.com/questions/517923/what-is-the-best-way-to-remove-accents-normalize-in-a-python-unicode-string"""
+    return intpunct.sub('', unidecode(string.lower()))
+
+
+def _normalize(string):
+   # Obsolete
     """ By means of regular expressions, normalize all characters to lower case,
         remove accent marks and other non-alphanumeric characters:"""
     string = a_acc.sub('a', \
@@ -114,11 +131,13 @@ def get_skews(string):
     """Get all 'skews' of a string, being the number of characters that must be removed
        at either end to result into the remaining (end)string being symmetric:"""
     skews = []
-    for s in range(0, len(string)):
-        l = len(string)
-        if string[:l-s] == string[:l-s][::-1]:
+    l = len(string)
+    for s in range(0, l):
+        string_r = string[:l-s]
+        string_l = string[s:]
+        if string_r == string_r[::-1]:
             skews.append(-s)      # Skew = negative if chars are removed from the right
-        if s > 0 and string[s:] == string[s:][::-1]:
+        if s > 0 and string_l == string_l[::-1]:
             skews.append(s)       # Skew = positive if chars are removed from the left
     return skews                  # List of skews, sorted by increasing absolute value
 
@@ -328,7 +347,7 @@ u_acc = re.compile('[üûÜÛ]')
 n_til = re.compile('[ñÑ]')
 c_ced = re.compile('[çÇ]')
 intpunct = re.compile('[\'\" :.&-]')
-slashtag = re.compile('\/[^/]*')
+slashtag = re.compile('\/[^/]*')      # Backslash kan/moet vermoedelijk vervallen hier
 
 # Text printed if -h option (help) or a non-existent option has been given:
 usage = """
